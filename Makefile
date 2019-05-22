@@ -1,2 +1,8 @@
-target: 
-	gcc -o zeckendorf main.c zeckadd.c zeckmult.c zeckpal.c zecksqr.c zeckstr.c
+.PHONY: all rename
+  
+all: main rename
+
+main: zeckadd.o zeckmult.o zeckpal.o zecksqr.o zeckstr.o
+
+rename:
+        mv main zeckendorf
