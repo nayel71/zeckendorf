@@ -1,6 +1,6 @@
-#include "zeckendorf.h"
+#include "../include/zeckendorf.h"
 
-bool zeckpal(const int n) {
+bool is_pal(const int n) {
 	char *const rep = zeckendorf(n);
 	const int len = strlen(rep);
 	for (int i = 0; i < len / 2; i++) {

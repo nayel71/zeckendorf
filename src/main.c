@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "zeckendorf.h"
+#include "../include/zeckendorf.h"
 
 const int LIMIT = 2144908972;
 
@@ -9,8 +9,8 @@ static void error(const char *msg, const char *param) {
 	exit(EXIT_FAILURE);
 }
 
-// prints a list of commands
-static void print_help(const char *progname) {
+// prints a list of commands and terminates the program
+static void help(const char *progname) {
 	fprintf(stderr, "Usage: (see zeckendorf.h for details)\n");
 	fprintf(stderr, "%s n            computes the Zeckendorf representation of n\n", progname);
 	fprintf(stderr, "%s sqr? n       checks if the Zeckendorf representation of n is a square\n", progname);
@@ -21,58 +21,57 @@ static void print_help(const char *progname) {
 }
 
 // checks if z is a valid Zeckendorf representation (see zeckendorf.h for details)
-static bool is_zeck(const char *z) {
-	if (z[0] != one) return false;
+static bool is_valid(const char *z) {
+	if (z[0] != ONE) return false;
 	for (int index = strlen(z) - 1; index > 0; index--) {
-		if (z[index] < zero || z[index] > one || z[index] - zero + z[index-1] - zero > 1) return false;
+		if (z[index] < ZERO || z[index] > ONE || z[index] - ZERO + z[index-1] - ZERO > 1) return false;
 	}
 	return true;
 }
 
 int main(int argc, char **argv) {
-	if (argc < 2) print_help(argv[0]);
+	if (argc < 2) help(argv[0]);
 	char *command = argv[1], *ans = NULL;
 	int n = atoi(command);
 
 	if (n != 0) {
-		if (argc != 2) print_help(argv[0]);
+		if (argc != 2) help(argv[0]);
 		if (n < 1 || n > LIMIT) error("out-of-range input", command);
 		ans = zeckendorf(n);
-		puts(ans);
-		free(ans);
 	} else if (strcmp(command, "sqr?") == 0) {
-		if (argc != 3) print_help(argv[0]);
+		if (argc != 3) help(argv[0]);
 		n = atoi(argv[2]);
 		if (n < 1 || n > LIMIT) error("out-of-range input", argv[2]);
-		if (zecksqr(n)) puts("True");
+		if (is_sqr(n)) puts("True");
 		else puts("False");
 	} else if (strcmp(command, "pal?") == 0) {
-		if (argc != 3) print_help(argv[0]);
+		if (argc != 3) help(argv[0]);
 		n = atoi(argv[2]);
 		if (n < 1 || n > LIMIT) error("out-of-range input", argv[2]);
-		if (zeckpal(n)) puts("True");
+		if (is_pal(n)) puts("True");
 		else puts("False");
 	} else if (strcmp(command, "add") == 0) {
-		if (argc < 4) print_help(argv[0]);
-		if (!is_zeck(argv[2])) error("invalid Zeckendorf representation", argv[2]);
+		if (argc < 4) help(argv[0]);
+		if (!is_valid(argv[2])) error("invalid Zeckendorf representation", argv[2]);
 		ans = argv[2];
 		for (int i = 3; i < argc; i++) {
-			if (!is_zeck(argv[i])) error("invalid Zeckendorf representation", argv[i]);
-			ans = zeck_add(ans, argv[i]);
+			if (!is_valid(argv[i])) error("invalid Zeckendorf representation", argv[i]);
+			ans = add(ans, argv[i]);
 		}
-		puts(ans);
-		free(ans);
 	} else if (strcmp(command, "mult") == 0) {
-		if (argc < 4) print_help(argv[0]);
-		if (!is_zeck(argv[2])) error("invalid Zeckendorf representation", argv[2]);
+		if (argc < 4) help(argv[0]);
+		if (!is_valid(argv[2])) error("invalid Zeckendorf representation", argv[2]);
 		ans = argv[2];
 		for (int i = 3; i < argc; i++) {
-			if (!is_zeck(argv[i])) error("invalid Zeckendorf representation", argv[i]);
-			ans = zeck_mult(ans, argv[i]);
+			if (!is_valid(argv[i])) error("invalid Zeckendorf representation", argv[i]);
+			ans = mult(ans, argv[i]);
 		}
+	} else {
+		help(argv[0]);
+	}
+
+	if (ans) {
 		puts(ans);
 		free(ans);
-	} else {
-		print_help(argv[0]);
 	}
 }
