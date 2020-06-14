@@ -9,30 +9,27 @@ static const char THREE = '3';
 
 // cf. paper by Frougny et al.
 
-// same_len(str1, str2) computes the Zeckendorf sum of the 
-// binary strings str1 and str2 that have the same length
+// add_same_len(str1, str2, len) computes the sum of the Zeckendorf
+// representations str1 and str2 with possible leading ZEROs
 // effects: allocates memory (caller must free)
-// requires: str1, str2 are binary strings of the same length
-static char *same_len(const char *str1, const char *str2) {
-	const int len = strlen(str1);
-	char *ans;
-
+// requires: len == strlen(str1) == strlen(str2)
+static char *add_same_len(const char *str1, const char *str2, const int len) {
 	if (str1[0] == ONE && str2[0] == ONE) {
 		char *cpy1 = malloc((len + 2) * sizeof(char));
-		char *cpy2 = malloc((len + 2) * sizeof(char));
 		cpy1[0] = ZERO;
 		cpy1[1] = '\0';
+		strcat(cpy1, str1);
+		char *cpy2 = malloc((len + 2) * sizeof(char));
 		cpy2[0] = ZERO;
 		cpy2[1] = '\0';
-		strcat(cpy1, str1);
 		strcat(cpy2, str2);
-		ans = same_len(cpy1, cpy2);
+		char *ans = add_same_len(cpy1, cpy2, len + 1);
 		free(cpy1);
 		free(cpy2);
 		return ans;
 	}
 	
-	ans = malloc((len + 2) * sizeof(char)); 
+	char *ans = malloc((len + 2) * sizeof(char)); 
 	ans[0] = ZERO; 
 	
 	// add pointwise
@@ -48,7 +45,7 @@ static char *same_len(const char *str1, const char *str2) {
 
 	// first stage
 
-	// eliminate 2's
+	// eliminate TWOs
 	for (int i = 0; i < len - 2; i++) {
 		if (ans[i] == ZERO && ans[i + 1] == TWO && ans[i + 2] == ZERO) {
 			ans[i] = ONE;
@@ -128,37 +125,36 @@ static char *same_len(const char *str1, const char *str2) {
 	}
 
 	ans[len + 1] = '\0';
-	char *ans2 = malloc((len + 2) * sizeof(char));
-	strcpy(ans2, memchr(ans, ONE, len + 1));
+	char *ans_without_leading_zero = malloc((len + 2) * sizeof(char));
+	strcpy(ans_without_leading_zero, memchr(ans, ONE, len + 1));
 	free(ans);
-	return ans2; 
+	return ans_without_leading_zero; 
 }
 
 char *add(const char *str1, const char *str2) {
 	const int len1 = strlen(str1);
 	const int len2 = strlen(str2);
-	char *cpy = malloc(((len1 > len2 ? len1 : len2) + 1) * sizeof(char));
-	char *ans;
 
-	// add leading ZEROs to make lengths equal, then use same_len
-	if (len1 > len2) {
+	// add leading ZEROs to make lengths equal, then use add_same_len
+	if (len1 >= len2) {
+		char *cpy = malloc((len1 + 1) * sizeof(char));
 		for (int i = 0; i < len1 - len2; i++) {
 			cpy[i] = ZERO;
 		}
 		cpy[len1 - len2] = '\0';
 		strcat(cpy, str2);
-		ans = same_len(str1, cpy);
-	} else if (len1 < len2) {
+		char *ans = add_same_len(str1, cpy, len1);
+		free(cpy);
+		return ans;
+	} else { 
+		char *cpy = malloc((len2 + 1) * sizeof(char));
 		for (int i = 0; i < len2 - len1; i++) {
 			cpy[i] = ZERO;
 		}
 		cpy[len2 - len1] = '\0';
 		strcat(cpy, str1);
-		ans = same_len(cpy, str2);
-	} else { 
-		ans = same_len(str1, str2);
+		char *ans = add_same_len(cpy, str2, len2);
+		free(cpy);
+		return ans;
 	}
-
-	free(cpy);
-	return ans;
 }
