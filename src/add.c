@@ -122,10 +122,8 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	}
 
 	ans[len + 1] = '\0';
-	char *ans_without_leading_zero = malloc((len + 2) * sizeof(char));
-	memcpy(ans_without_leading_zero, memchr(ans, ONE, len + 1), len + 2);
-	free(ans);
-	return ans_without_leading_zero; 
+	memmove(ans, memchr(ans, ONE, len + 1), len + 2);
+	return ans; 
 }
 
 char *add(const char *str1, const char *str2) {
