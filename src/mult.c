@@ -71,7 +71,7 @@ char *mult(const char *str1, const char *str2) {
 	int n1 = 0; // number of ONEs in str1
 	int n2 = 0; // number of ONEs in str2
 
-	// split first string into sum of Fibonacci numbers
+	// split first string into a sum of Fibonacci numbers
 	for (int i = 0; i < len1; i++) {
 		if (str1[i] == ONE) {
 			fib1[n1][0] = ONE;
@@ -84,7 +84,7 @@ char *mult(const char *str1, const char *str2) {
 		} 
 	}
 
-	// split second string into sum of Fibonacci numbers
+	// split second string into a sum of Fibonacci numbers
 	for (int i = 0; i < len2; i++) {
 		if (str2[i] == ONE) {
 			fib2[n2][0] = ONE;

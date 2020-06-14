@@ -12,8 +12,7 @@ static const char THREE = '3';
 // same_len(str1, str2) computes the Zeckendorf sum of the 
 // binary strings str1 and str2 that have the same length
 // effects: allocates memory (caller must free)
-// requires: str1, str2 are Zeckendorf representations
-//           strlen(str1) = strlen(str2)
+// requires: str1, str2 are binary strings of the same length
 static char *same_len(const char *str1, const char *str2) {
 	const int len = strlen(str1);
 	char *ans;
@@ -141,7 +140,7 @@ char *add(const char *str1, const char *str2) {
 	char *cpy = malloc(((len1 > len2 ? len1 : len2) + 1) * sizeof(char));
 	char *ans;
 
-	// add leading zeros to make lengths equal, then use same_len
+	// add leading ZEROs to make lengths equal, then use same_len
 	if (len1 > len2) {
 		for (int i = 0; i < len1 - len2; i++) {
 			cpy[i] = ZERO;
