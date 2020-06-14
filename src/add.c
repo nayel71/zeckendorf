@@ -9,20 +9,17 @@ static const char THREE = '3';
 
 // cf. paper by Frougny et al.
 
-// add_same_len(str1, str2, len) computes the sum of the Zeckendorf
-// representations str1 and str2 with possible leading ZEROs
+// add_same_len(str1, str2, len) returns the Zeckendorf sum of the binary strings str1 and str2
 // effects: allocates memory (caller must free)
 // requires: len == strlen(str1) == strlen(str2)
 static char *add_same_len(const char *str1, const char *str2, const int len) {
 	if (str1[0] == ONE && str2[0] == ONE) {
 		char *cpy1 = malloc((len + 2) * sizeof(char));
 		cpy1[0] = ZERO;
-		cpy1[1] = '\0';
-		strcat(cpy1, str1);
+		memcpy(cpy1 + 1, str1, len + 1);
 		char *cpy2 = malloc((len + 2) * sizeof(char));
 		cpy2[0] = ZERO;
-		cpy2[1] = '\0';
-		strcat(cpy2, str2);
+		memcpy(cpy2 + 1, str2, len + 1);
 		char *ans = add_same_len(cpy1, cpy2, len + 1);
 		free(cpy1);
 		free(cpy2);
@@ -126,7 +123,7 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 
 	ans[len + 1] = '\0';
 	char *ans_without_leading_zero = malloc((len + 2) * sizeof(char));
-	strcpy(ans_without_leading_zero, memchr(ans, ONE, len + 1));
+	memcpy(ans_without_leading_zero, memchr(ans, ONE, len + 1), len + 2);
 	free(ans);
 	return ans_without_leading_zero; 
 }
@@ -138,21 +135,15 @@ char *add(const char *str1, const char *str2) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 >= len2) {
 		char *cpy = malloc((len1 + 1) * sizeof(char));
-		for (int i = 0; i < len1 - len2; i++) {
-			cpy[i] = ZERO;
-		}
-		cpy[len1 - len2] = '\0';
-		strcat(cpy, str2);
+		memset(cpy, ZERO, len1 - len2);
+		memcpy(cpy + len1 - len2, str2, len2 + 1);
 		char *ans = add_same_len(str1, cpy, len1);
 		free(cpy);
 		return ans;
 	} else { 
 		char *cpy = malloc((len2 + 1) * sizeof(char));
-		for (int i = 0; i < len2 - len1; i++) {
-			cpy[i] = ZERO;
-		}
-		cpy[len2 - len1] = '\0';
-		strcat(cpy, str1);
+		memset(cpy, ZERO, len2 - len1);
+		memcpy(cpy + len2 - len1, str1, len1 + 1);
 		char *ans = add_same_len(cpy, str2, len2);
 		free(cpy);
 		return ans;
