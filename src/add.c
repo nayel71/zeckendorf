@@ -123,7 +123,7 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 
 	ans[len + 1] = '\0';
 	memmove(ans, memchr(ans, ONE, len + 1), len + 2);
-	return ans; 
+	return ans;
 }
 
 char *add(const char *str1, const char *str2) {
@@ -131,19 +131,21 @@ char *add(const char *str1, const char *str2) {
 	const int len2 = strlen(str2);
 
 	// add leading ZEROs to make lengths equal, then use add_same_len
-	if (len1 >= len2) {
+	if (len1 > len2) {
 		char *cpy = malloc((len1 + 1) * sizeof(char));
 		memset(cpy, ZERO, len1 - len2);
 		memcpy(cpy + len1 - len2, str2, len2 + 1);
 		char *ans = add_same_len(str1, cpy, len1);
 		free(cpy);
 		return ans;
-	} else { 
+	} else if (len1 < len2) { 
 		char *cpy = malloc((len2 + 1) * sizeof(char));
 		memset(cpy, ZERO, len2 - len1);
 		memcpy(cpy + len2 - len1, str1, len1 + 1);
 		char *ans = add_same_len(cpy, str2, len2);
 		free(cpy);
 		return ans;
+	} else {
+		return add_same_len(str1, str2, len1);
 	}
 }
