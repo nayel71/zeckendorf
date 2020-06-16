@@ -1,3 +1,6 @@
+#ifndef ZECKENDORF_H
+#define ZECKENDORF_H
+
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -32,3 +35,5 @@ char *add(const char *str1, const char *str2);
 // effects: allocates memory (caller must free)
 // requires: str1, str2 are Zeckendorf representations
 char *mult(const char *str1, const char *str2);
+
+#endif /* ZECKEONDORF_H */

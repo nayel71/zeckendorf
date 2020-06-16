@@ -1,5 +1,4 @@
 #include "../include/zeckendorf.h"
-#include <stdio.h>
 
 // digit constants:
 const char ZERO = '0';
