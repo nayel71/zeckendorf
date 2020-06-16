@@ -28,7 +28,7 @@ $(OBJS): $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 $(EXEC): $(OBJS)
-	$(CC) -o $@ $^
+	$(CC) $(LDLIBS) -o $@ $^
 	mv $(OBJDIR)/*.d $(DEPDIR)/
 
 -include $(DEPS)
