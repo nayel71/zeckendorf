@@ -43,13 +43,13 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	// first stage
 
 	// eliminate TWOs
-	for (int i = 0; i < len - 2; i++) {
-		if (ans[i] == ZERO && ans[i + 1] == TWO && ans[i + 2] == ZERO) {
+	for (int i = 0; i <= len - 2; i++) {
+		if (i < len - 2 && ans[i] == ZERO && ans[i + 1] == TWO && ans[i + 2] == ZERO) {
 			ans[i] = ONE;
 			ans[i + 1] = ZERO;
 			ans[i + 2] = ZERO;
 			ans[i + 3] += 1;
-		} else if (ans[i] == ZERO && ans[i + 1] == THREE && ans[i + 2] == ZERO) {
+		} else if (i < len - 2 && ans[i] == ZERO && ans[i + 1] == THREE && ans[i + 2] == ZERO) {
 			ans[i] = ONE;
 			ans[i + 1] = ONE;
 			ans[i + 2] = ZERO;
@@ -62,16 +62,6 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 			ans[i] = ONE;
 			ans[i + 1] = ZERO;
 			ans[i + 2] = ONE;
-		} 
-
-		if (ans[len - 2] == ZERO && ans[len - 1] == TWO && ans[len] == ONE) {
-			ans[len - 2] = ONE;
-			ans[len - 1] = ONE;
-			ans[len] = ZERO;
-		} else if (ans[len - 2] == ZERO && ans[len - 1] == ONE && ans[len] == TWO) {
-			ans[len - 2] = ONE;
-			ans[len - 1] = ZERO;
-			ans[len] = ONE;
 		} 
 	}
 
@@ -95,10 +85,6 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	} else if (ans[len - 1] == ZERO && ans[len] == TWO) {
 		ans[len - 1] = ONE;
 		ans[len] = ZERO;
-	} else if (ans[len - 2] == ZERO && ans[len - 1] == ONE && ans[len] == TWO) {
-		ans[len - 2] = ONE;
-		ans[len - 1] = ZERO;
-		ans[len] = ONE;
 	}
 
 	// second stage

@@ -3,9 +3,19 @@
 
 const int LIMIT = 2144908972;
 
+typedef enum {REP, BOUND} error_t;
+
+// returns an error message based on the error type
+static const char *message(error_t err) {
+	switch (err) {
+		case BOUND: return "out-of-range input";
+		case REP:   return "invalid Zeckendorf representation";
+	}
+}
+
 // prints an error message and terminates the program
-static void error(const char *msg, const char *param) {
-	fprintf(stderr, "Error: %s %s\n", msg, param);
+static void error(error_t err, const char *param) {
+	fprintf(stderr, "Error: %s %s\n", message(err), param);
 	exit(EXIT_FAILURE);
 }
 
@@ -36,34 +46,32 @@ int main(int argc, char **argv) {
 
 	if (n != 0) {
 		if (argc != 2) help(argv[0]);
-		if (n < 1 || n > LIMIT) error("out-of-range input", command);
+		if (n < 1 || n > LIMIT) error(BOUND, command);
 		ans = zeckendorf(n);
 	} else if (strcmp(command, "sqr?") == 0) {
 		if (argc != 3) help(argv[0]);
 		n = atoi(argv[2]);
-		if (n < 1 || n > LIMIT) error("out-of-range input", argv[2]);
+		if (n < 1 || n > LIMIT) error(BOUND, argv[2]);
 		if (is_sqr(n)) puts("True");
 		else puts("False");
 	} else if (strcmp(command, "pal?") == 0) {
 		if (argc != 3) help(argv[0]);
 		n = atoi(argv[2]);
-		if (n < 1 || n > LIMIT) error("out-of-range input", argv[2]);
+		if (n < 1 || n > LIMIT) error(BOUND, argv[2]);
 		if (is_pal(n)) puts("True");
 		else puts("False");
 	} else if (strcmp(command, "add") == 0) {
-		if (argc < 4) help(argv[0]);
-		if (!is_valid(argv[2])) error("invalid Zeckendorf representation", argv[2]);
-		ans = argv[2];
-		for (int i = 3; i < argc; i++) {
-			if (!is_valid(argv[i])) error("invalid Zeckendorf representation", argv[i]);
+		if (argc < 3) help(argv[0]);
+		ans = "0";
+		for (int i = 2; i < argc; i++) {
+			if (!is_valid(argv[i])) error(REP, argv[i]);
 			ans = add(ans, argv[i]);
 		}
 	} else if (strcmp(command, "mult") == 0) {
-		if (argc < 4) help(argv[0]);
-		if (!is_valid(argv[2])) error("invalid Zeckendorf representation", argv[2]);
-		ans = argv[2];
-		for (int i = 3; i < argc; i++) {
-			if (!is_valid(argv[i])) error("invalid Zeckendorf representation", argv[i]);
+		if (argc < 3) help(argv[0]);
+		ans = "1";
+		for (int i = 2; i < argc; i++) {
+			if (!is_valid(argv[i])) error(REP, argv[i]);
 			ans = mult(ans, argv[i]);
 		}
 	} else {
