@@ -66,11 +66,11 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	}
 
 	// clean-up
-	if (ans[len - 2] == ZERO && ans[len - 1] == THREE && ans[len] == ZERO) {
+	if (len > 1 && ans[len - 2] == ZERO && ans[len - 1] == THREE && ans[len] == ZERO) {
 		ans[len - 2] = ONE;
 		ans[len - 1] = ONE;
 		ans[len] = ONE;
-	} else if (ans[len - 2] == ZERO && ans[len - 1] == TWO && ans[len] == ZERO) {
+	} else if (len > 1 && ans[len - 2] == ZERO && ans[len - 1] == TWO && ans[len] == ZERO) {
 		ans[len - 2] = ONE;
 		ans[len - 1] = ZERO;
 		ans[len] = ONE;
