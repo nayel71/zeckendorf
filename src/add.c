@@ -121,7 +121,10 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	}
 
 	ans[len + 1] = '\0';
-	memmove(ans, memchr(ans, ONE, len + 1), len + 2);
+
+	// remove leading ZEROs
+	char *pos = memchr(ans, ONE, len + 1);
+	memmove(ans, pos, len + 2 + ans - pos);
 	return ans;
 }
 

@@ -3,6 +3,11 @@ CC	= gcc
 LDLIBS	=
 CFLAGS	= -Wall -MMD -MP
 
+ifdef detect_leaks
+ASFLAGS	= -fsanitize=address
+CFLAGS += $(ASFLAGS) -g
+endif
+
 # directory variables
 SRCDIR	= src
 OBJDIR	= obj
@@ -28,7 +33,7 @@ $(OBJS): $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
 $(EXEC): $(OBJS)
-	$(CC) $(LDLIBS) -o $@ $^
+	$(CC) $(ASFLAGS) $(LDLIBS) -o $@ $^
 	mv $(OBJDIR)/*.d $(DEPDIR)/
 
 -include $(DEPS)
