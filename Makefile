@@ -3,11 +3,9 @@ CC	= gcc
 LDLIBS	=
 CFLAGS	= -Wall -MMD -MP
 
-ifdef enable_asan
 ifeq ($(enable_asan),1)
 ASFLAGS = -fsanitize=address
 CFLAGS += $(ASFLAGS) -g
-endif
 endif
 
 # directory variables
