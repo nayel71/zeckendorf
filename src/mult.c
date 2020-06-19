@@ -48,10 +48,8 @@ static char *easy_mult(const char *str1, const char *str2, int len1, int len2) {
 		ans[2 * ind1 - 5] = ZERO;
 		ans[2 * ind1 - 4] = ZERO;
 		ans[2 * ind1 - 3] = ONE;
-		if (ind2 - ind1 - 1 >= 1) {
-			for (int j = 1; j <= ind2 - ind1 - 1; j++) {
-				ans[2 * ind1 - 3 + j] = ZERO;
-			}
+		for (int j = 1; j <= ind2 - ind1 - 1; j++) {
+			ans[2 * ind1 - 3 + j] = ZERO;
 		}
 	}
 

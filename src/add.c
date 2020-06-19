@@ -27,6 +27,7 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	
 	char *ans = malloc((len + 2) * sizeof(char)); 
 	ans[0] = ZERO; 
+	ans[len + 1] = '\0';
 	
 	// add pointwise
 	for (int i = 1; i <= len; i++) {
@@ -119,8 +120,6 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 			ans[i + 2] = ZERO;
 		}
 	}
-
-	ans[len + 1] = '\0';
 
 	// remove leading ZEROs
 	char *pos = memchr(ans, ONE, len + 1);
