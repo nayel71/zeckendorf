@@ -3,12 +3,12 @@
 
 const int LIMIT = 2144908972;
 
-typedef enum {REP, BOUND} error_t;
+typedef enum {BOUND, REP} error_t;
 
 // returns an error message based on the error type
 static const char *message(error_t err) {
 	switch (err) {
-		case BOUND: return "out-of-range input";
+		case BOUND: return "out-of-range argument";
 		case REP:   return "invalid Zeckendorf representation";
 	}
 }

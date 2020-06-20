@@ -36,4 +36,4 @@ char *add(const char *str1, const char *str2);
 // requires: str1, str2 are Zeckendorf representations
 char *mult(const char *str1, const char *str2);
 
-#endif /* ZECKEONDORF_H */
+#endif /* ZECKENDORF_H */
