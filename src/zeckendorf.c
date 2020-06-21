@@ -25,6 +25,6 @@ char *zeckendorf(const int n) {
 		}
 		
 	} 
-	ans[i] = '\0'; // at this point, i = original index - 1 
+	ans[i] = '\0'; // at this point, i == original index - 1 
 	return ans;
 }

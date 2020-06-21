@@ -3,7 +3,7 @@
 // easy_mult(str1, str2, len1, len2) returns the Zeckendorf product of the binary strings
 // str1 and str2 of the form 0...010...0 of lengths len1 and len2 respectively
 // effects: allocates memory (caller must free)
-static char *easy_mult(const char *str1, const char *str2, int len1, int len2) {
+static char *easy_mult(const char *str1, const char *str2, const int len1, const int len2) {
 	if (len2 < len1) {
 		return easy_mult(str2, str1, len2, len1);
 	}
