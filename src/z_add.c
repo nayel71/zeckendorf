@@ -113,10 +113,9 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	return ans;
 }
 
-char *add(const char *str1, const char *str2) {
-	const int len1 = strlen(str1);
-	const int len2 = strlen(str2);
-
+// add_len(str1, str2, len1, len2) returns the Zeckendorf sum of the binary strings str1 and str2
+// requires: len1 == strlen(str1), len2 == strlen(str2)
+static char *add_len(const char *str1, const char *str2, const int len1, const int len2) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
 		char *cpy = malloc((len1 + 1) * sizeof(char));
@@ -125,14 +124,13 @@ char *add(const char *str1, const char *str2) {
 		char *ans = add_same_len(str1, cpy, len1);
 		free(cpy);
 		return ans;
-	} else if (len1 < len2) { 
-		char *cpy = malloc((len2 + 1) * sizeof(char));
-		memset(cpy, ZERO, len2 - len1);
-		memcpy(cpy + len2 - len1, str1, len1 + 1);
-		char *ans = add_same_len(cpy, str2, len2);
-		free(cpy);
-		return ans;
+	} else if (len1 < len2) {
+		return add_len(str2, str1, len2, len1);
 	} else {
 		return add_same_len(str1, str2, len1);
 	}
+}
+
+char *z_add(const char *str1, const char *str2) {
+	return add_len(str1, str2, strlen(str1), strlen(str2));
 }

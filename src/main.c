@@ -22,11 +22,11 @@ static void error(error_t err, const char *param) {
 // prints a list of commands and terminates the program
 static void help(const char *progname) {
 	fprintf(stderr, "Usage: (see zeckendorf.h for details)\n");
-	fprintf(stderr, "%s n            computes the Zeckendorf representation of n\n", progname);
-	fprintf(stderr, "%s sqr? n       checks if the Zeckendorf representation of n is a square\n", progname);
-	fprintf(stderr, "%s pal? n       checks if the Zeckendorf representation of n is a palindrome\n", progname);
-	fprintf(stderr, "%s add a b ...  computes the sum of the Zeckendorf representations a, b, ...\n", progname);
-	fprintf(stderr, "%s mult a b ... computes the product of the Zeckendorf representations a, b, ...\n", progname);
+	fprintf(stderr, "%s n computes the Zeckendorf representation of n\n", progname);
+	fprintf(stderr, "%s pow n computes the largest k such that the Zeckendorf representation of n is a k-power\n", progname);
+	fprintf(stderr, "%s pal n checks if the Zeckendorf representation of n is a palindrome\n", progname);
+	fprintf(stderr, "%s add a b ... computes the sum of the Zeckendorf representations a, b, ...\n", progname);
+	fprintf(stderr, "%s mul a b ... computes the product of the Zeckendorf representations a, b, ...\n", progname);
 	exit(EXIT_FAILURE);
 }
 
@@ -48,31 +48,31 @@ int main(int argc, char **argv) {
 		if (argc != 2) help(argv[0]);
 		if (n < 1 || n > LIMIT) error(BOUND, command);
 		ans = zeckendorf(n);
-	} else if (strcmp(command, "sqr?") == 0) {
+	} else if (strcmp(command, "pow") == 0) {
 		if (argc != 3) help(argv[0]);
 		n = atoi(argv[2]);
 		if (n < 1 || n > LIMIT) error(BOUND, argv[2]);
-		if (is_sqr(n)) puts("True");
-		else puts("False");
-	} else if (strcmp(command, "pal?") == 0) {
+		printf("%d\n", z_pow(n));
+	} else if (strcmp(command, "pal") == 0) {
 		if (argc != 3) help(argv[0]);
 		n = atoi(argv[2]);
 		if (n < 1 || n > LIMIT) error(BOUND, argv[2]);
-		if (is_pal(n)) puts("True");
-		else puts("False");
+		z_pal(n) ? puts("True") : puts("False");
 	} else if (strcmp(command, "add") == 0) {
-		if (argc < 3) help(argv[0]);
-		ans = "0";
-		for (int i = 2; i < argc; i++) {
+		if (argc < 4) help(argv[0]);
+		if (!is_valid(argv[2])) error(REP, argv[2]);
+		ans = argv[2];
+		for (int i = 3; i < argc; i++) {
 			if (!is_valid(argv[i])) error(REP, argv[i]);
-			ans = add(ans, argv[i]);
+			ans = z_add(ans, argv[i]);
 		}
-	} else if (strcmp(command, "mult") == 0) {
-		if (argc < 3) help(argv[0]);
-		ans = "1";
-		for (int i = 2; i < argc; i++) {
+	} else if (strcmp(command, "mul") == 0) {
+		if (argc < 4) help(argv[0]);
+		if (!is_valid(argv[2])) error(REP, argv[2]);
+		ans = argv[2];
+		for (int i = 3; i < argc; i++) {
 			if (!is_valid(argv[i])) error(REP, argv[i]);
-			ans = mult(ans, argv[i]);
+			ans = z_mul(ans, argv[i]);
 		}
 	} else {
 		help(argv[0]);

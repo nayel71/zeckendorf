@@ -1,11 +1,11 @@
 #include "../include/zeckendorf.h"
 
-// easy_mult(str1, str2, len1, len2) returns the Zeckendorf product of the binary strings
+// easy_mul(str1, str2, len1, len2) returns the Zeckendorf product of the binary strings
 // str1 and str2 of the form 0...010...0 of lengths len1 and len2 respectively
 // effects: allocates memory (caller must free)
-static char *easy_mult(const char *str1, const char *str2, const int len1, const int len2) {
+static char *easy_mul(const char *str1, const char *str2, const int len1, const int len2) {
 	if (len2 < len1) {
-		return easy_mult(str2, str1, len2, len1);
+		return easy_mul(str2, str1, len2, len1);
 	}
 
 	char *ans = malloc((len1 + len2) * sizeof(char));
@@ -56,7 +56,7 @@ static char *easy_mult(const char *str1, const char *str2, const int len1, const
 	return ans;
 }
 
-char *mult(const char *str1, const char *str2) {
+char *z_mul(const char *str1, const char *str2) {
 	const int len1 = strlen(str1) + 1;
 	const int len2 = strlen(str2) + 1;
 	int lengths1[len1 / 2];
@@ -93,11 +93,11 @@ char *mult(const char *str1, const char *str2) {
 	char *sum = malloc((len1 + len2) * sizeof(char));
 	for (int k = n2 - 1; k >= 0; k--) {
 		for (int j = n1 - 1; j >= 0; j--) {
-			char *summand = easy_mult(fib1[j], fib2[k], lengths1[j], lengths2[k]);
+			char *summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k]);
 			if (k == n2 - 1 && j == n1 - 1) {
 				strcpy(sum, summand);
 			} else {
-				char *temp = add(sum, summand);
+				char *temp = z_add(sum, summand);
 				strcpy(sum, temp);
 				free(temp);
 			}
