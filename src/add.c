@@ -9,7 +9,7 @@ static const char THREE = '3';
 // cf. paper by Frougny et al.
 
 // add_same_len(str1, str2, len) returns the sum of str1 and str2
-// requires: str1 and str2 are Zeckendorf representations, len == strlen(str1) == strlen(str2)
+// requires: str1 and str2 are Zeckendorf representations with possible leading ZEROs, len == strlen(str1) == strlen(str2)
 // effects: allocates memory (caller must free)
 static char *add_same_len(const char *str1, const char *str2, const int len) {
 	if (str1[0] == ONE && str2[0] == ONE) {
