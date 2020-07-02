@@ -1,8 +1,7 @@
 #include "../include/zeckendorf.h"
 
 // easy_mul(str1, str2, len1, len2) returns the product of str1 and str2
-// requires: str1 and str2 are Zeckendorf representations containing a single ONE and possible leading ZEROs,
-// len1 == strlen(str1), len2 == strlen(str2)
+// requires: str1 and str2 are Zeckendorf representations containing a single ONE, len1 == strlen(str1), len2 == strlen(str2)
 // effects: allocates memory (caller must free)
 static char *easy_mul(const char *str1, const char *str2, const int len1, const int len2) {
 	if (len2 < len1) {
