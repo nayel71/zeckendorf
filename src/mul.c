@@ -12,9 +12,10 @@ static char *easy_mul(const char *str1, const char *str2, const int len1, const 
 	char *ans = malloc((len1 + len2) * sizeof(char));
 	const int ind1 = len1 + 1;
 	const int ind2 = len2 + 1;
+	const int rem = ind1 % 2;
 	ans[ind1 + ind2 - 3] = '\0';
 
-	for (int j = 0; j < 2 * ind1 - 4 - 2 * (ind1 % 2); j++) {
+	for (int j = 0; j < 2 * ind1 - 4 - 2 * rem; j++) {
 		if (j % 4 == 0) {
 			ans[j] = ONE;
 		} else {
@@ -22,9 +23,9 @@ static char *easy_mul(const char *str1, const char *str2, const int len1, const 
 		}
 	}
 
-	if (ind2 >= ind1 && ind1 % 2 == 0) {
+	if (ind2 >= ind1 && rem == 0) {
 		ans[2 * ind1 - 4] = ONE;
-	} else if (ind2 == ind1 && ind1 % 2 == 1) {
+	} else if (ind2 == ind1 && rem == 1) {
 		ans[2 * ind1 - 6] = ONE;
 		ans[2 * ind1 - 5] = ZERO;
 		ans[2 * ind1 - 4] = ONE;
@@ -35,8 +36,8 @@ static char *easy_mul(const char *str1, const char *str2, const int len1, const 
 		ans[2 * ind1 - 3] = ONE;
 	}
 
-	for (int j = 1; j <= ind2 - ind1 - (ind1 % 2); j++) {
-		ans[2 * ind1 - 4 + (ind1 % 2) + j] = ZERO;
+	for (int j = 1; j <= ind2 - ind1 - rem; j++) {
+		ans[2 * ind1 - 4 + rem + j] = ZERO;
 	}
 
 	return ans;
