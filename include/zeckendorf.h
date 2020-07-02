@@ -22,7 +22,7 @@ extern const z_int LIMIT;
 // effects: allocates memory (caller must free)
 char *zeckendorf(const z_int n);
 
-// z_pow(n) returns the largest k such that zeckendorf(n) is a k-power
+// z_pow(n) returns the largest integer k such that zeckendorf(n) is a k-power
 // i.e. of the form xx...xx (k repeated blocks) for some string x
 int z_pow(const z_int n);
 

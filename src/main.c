@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <limits.h>
 #include "../include/zeckendorf.h"
 
 const z_int LIMIT = 9217463444206948444;
