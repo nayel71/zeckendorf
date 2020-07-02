@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	}
 
 	char *command = argv[1], *ans = NULL;
-	z_int n = strtol(command, NULL, 0);
+	z_int n = strtoll(command, NULL, 0);
 
 	if (n != 0) {
 		if (argc != 2) {
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 		if (argc != 3) {
 			return help(argv[0]);
 		}
-		n = strtol(argv[2], NULL, 0);
+		n = strtoll(argv[2], NULL, 0);
 		if (n < 1 || n > LIMIT) {
 			return error(BOUND, argv[2]);
 		} else {
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
 		if (argc != 3) {
 			return help(argv[0]);
 		}
-		n = strtol(argv[2], NULL, 0);
+		n = strtoll(argv[2], NULL, 0);
 		if (n < 1 || n > LIMIT) {
 			return error(BOUND, argv[2]);
 		} else if (z_pal(n)) {
