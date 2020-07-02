@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <limits.h>
 #include "../include/zeckendorf.h"
 
-const int LIMIT = 2144908972;
+const z_int LIMIT = 9217463444206948444;
 
 typedef enum {BOUND, REP} error_t;
 
@@ -42,7 +43,7 @@ static bool is_valid(const char *z) {
 int main(int argc, char **argv) {
 	if (argc < 2) help(argv[0]);
 	char *command = argv[1], *ans = NULL;
-	int n = atoi(command);
+	z_int n = strtol(command, NULL, 0);
 
 	if (n != 0) {
 		if (argc != 2) help(argv[0]);
@@ -50,14 +51,18 @@ int main(int argc, char **argv) {
 		ans = zeckendorf(n);
 	} else if (strcmp(command, "pow") == 0) {
 		if (argc != 3) help(argv[0]);
-		n = atoi(argv[2]);
+		n = strtol(argv[2], NULL, 0);
 		if (n < 1 || n > LIMIT) error(BOUND, argv[2]);
 		printf("%d\n", z_pow(n));
 	} else if (strcmp(command, "pal") == 0) {
 		if (argc != 3) help(argv[0]);
-		n = atoi(argv[2]);
+		n = strtol(argv[2], NULL, 0);
 		if (n < 1 || n > LIMIT) error(BOUND, argv[2]);
-		z_pal(n) ? puts("True") : puts("False");
+		if (z_pal(n)) {
+			puts("True");
+		} else {
+			puts("False");
+		}
 	} else if (strcmp(command, "add") == 0) {
 		if (argc < 4) help(argv[0]);
 		if (!is_valid(argv[2])) error(REP, argv[2]);

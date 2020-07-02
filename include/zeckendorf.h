@@ -5,10 +5,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+typedef long long z_int;
+typedef char *z_rep;
+
 // constants:
 extern const char ZERO;
 extern const char ONE;
-extern const int LIMIT;
+extern const z_int LIMIT;
 
 // all of the following require: 
 // - n is a positive integer <= LIMIT
@@ -17,14 +20,14 @@ extern const int LIMIT;
 
 // zeckendorf(n) returns the Zeckendorf representation of n
 // effects: allocates memory (caller must free)
-char *zeckendorf(const int n);
+char *zeckendorf(const z_int n);
 
 // z_pow(n) returns the largest k such that zeckendorf(n) is a k-power
 // i.e. of the form xx...xx (k repeated blocks) for some string x
-int z_pow(const int n);
+int z_pow(const z_int n);
 
 // z_pal(n) returns true if zeckendorf(n) is a palindrome, and false otherwise
-bool z_pal(const int n);
+bool z_pal(const z_int n);
 
 // z_add(str1, str2) returns the sum of str1 and str2
 // effects: allocates memory (caller must free)
