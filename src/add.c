@@ -8,9 +8,9 @@ static const char THREE = '3';
 
 // cf. paper by Frougny et al.
 
-// add_same_len(str1, str2, len) returns the Zeckendorf sum of the binary strings str1 and str2
+// add_same_len(str1, str2, len) returns the sum of str1 and str2
+// requires: str1 and str2 are Zeckendorf representations, len == strlen(str1) == strlen(str2)
 // effects: allocates memory (caller must free)
-// requires: len == strlen(str1) == strlen(str2)
 static char *add_same_len(const char *str1, const char *str2, const int len) {
 	if (str1[0] == ONE && str2[0] == ONE) {
 		char *cpy1 = malloc((len + 2) * sizeof(char));
@@ -113,8 +113,9 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	return ans;
 }
 
-// add_len(str1, str2, len1, len2) returns the Zeckendorf sum of the binary strings str1 and str2
-// requires: len1 == strlen(str1), len2 == strlen(str2)
+// add_len(str1, str2, len1, len2) returns the sum of str1 and str2
+// requires: str1 and str2 are Zeckendorf representations, len1 == strlen(str1), len2 == strlen(str2)
+// effects: allocates memory (caller must free)
 static char *add_len(const char *str1, const char *str2, const int len1, const int len2) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {

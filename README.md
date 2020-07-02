@@ -1,4 +1,4 @@
-# A Program for Zeckendorf Arithmetic
+# Zeckendorf Arithmetic
 
 Every positive integer has a unique representation as a sum of non-consecutive Fibonacci numbers, known as its [Zeckendorf representation](https://oeis.org/wiki/Zeckendorf_representation). This program can be used for the following purposes.
 

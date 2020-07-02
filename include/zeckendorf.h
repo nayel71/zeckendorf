@@ -6,7 +6,6 @@
 #include <stdlib.h>
 
 typedef long long z_int;
-typedef char *z_rep;
 
 // constants:
 extern const char ZERO;

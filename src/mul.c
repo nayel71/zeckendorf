@@ -1,7 +1,8 @@
 #include "../include/zeckendorf.h"
 
-// easy_mul(str1, str2, len1, len2) returns the Zeckendorf product of the binary strings
-// str1 and str2 of the form 0...010...0 of lengths len1 and len2 respectively
+// easy_mul(str1, str2, len1, len2) returns the product of str1 and str2
+// requires: str1 and str2 are Zeckendorf representations containing a single ONE and possible leading ZEROs,
+// len1 == strlen(str1), len2 == strlen(str2)
 // effects: allocates memory (caller must free)
 static char *easy_mul(const char *str1, const char *str2, const int len1, const int len2) {
 	if (len2 < len1) {
@@ -13,44 +14,29 @@ static char *easy_mul(const char *str1, const char *str2, const int len1, const 
 	const int ind2 = len2 + 1;
 	ans[ind1 + ind2 - 3] = '\0';
 
-	if (ind2 >= ind1 && ind1 >= 2 && ind1 % 2 == 0) {
-		for (int j = 0; j < 2 * ind1 - 4; j++) {
-			if (j % 4 == 0) {
-				ans[j] = ONE;
-			} else {
-				ans[j] = ZERO;
-			}
+	for (int j = 0; j < 2 * ind1 - 4 - 2 * (ind1 % 2); j++) {
+		if (j % 4 == 0) {
+			ans[j] = ONE;
+		} else {
+			ans[j] = ZERO;
 		}
+	}
+
+	if (ind2 >= ind1 && ind1 % 2 == 0) {
 		ans[2 * ind1 - 4] = ONE;
-		for (int j = 1; j <= ind2 - ind1; j++) {
-			ans[2 * ind1 - 4 + j] = ZERO;
-		}
 	} else if (ind2 == ind1 && ind1 % 2 == 1) {
-		for (int j = 0; j < 2 * ind1 - 6; j++) {
-			if (j % 4 == 0) {
-				ans[j] = ONE;
-			} else {
-				ans[j] = ZERO;
-			}
-		}
 		ans[2 * ind1 - 6] = ONE;
 		ans[2 * ind1 - 5] = ZERO;
 		ans[2 * ind1 - 4] = ONE;
-	} else if (ind2 >= ind1 + 1 && ind1 >= 2 && ind1 % 2 == 1) {
-		for (int j = 0; j < 2 * ind1 - 6; j++) {
-			if (j % 4 == 0) {
-				ans[j] = ONE;
-			} else {
-				ans[j] = ZERO;
-			}
-		}
+	} else {
 		ans[2 * ind1 - 6] = ONE;
 		ans[2 * ind1 - 5] = ZERO;
 		ans[2 * ind1 - 4] = ZERO;
 		ans[2 * ind1 - 3] = ONE;
-		for (int j = 1; j <= ind2 - ind1 - 1; j++) {
-			ans[2 * ind1 - 3 + j] = ZERO;
-		}
+	}
+
+	for (int j = 1; j <= ind2 - ind1 - (ind1 % 2); j++) {
+		ans[2 * ind1 - 4 + (ind1 % 2) + j] = ZERO;
 	}
 
 	return ans;
@@ -59,11 +45,10 @@ static char *easy_mul(const char *str1, const char *str2, const int len1, const 
 char *z_mul(const char *str1, const char *str2) {
 	const int len1 = strlen(str1) + 1;
 	const int len2 = strlen(str2) + 1;
-	int lengths1[len1 / 2];
-	int lengths2[len2 / 2];
 	char fib1[len1 / 2][len1];
 	char fib2[len2 / 2][len2];
-
+	int lengths1[len1 / 2];
+	int lengths2[len2 / 2];
 	int n1 = 0; // number of ONEs in str1
 	int n2 = 0; // number of ONEs in str2
 
@@ -91,6 +76,7 @@ char *z_mul(const char *str1, const char *str2) {
 
 	// multiply everything out
 	char *sum = malloc((len1 + len2) * sizeof(char));
+
 	for (int k = n2 - 1; k >= 0; k--) {
 		for (int j = n1 - 1; j >= 0; j--) {
 			char *summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k]);
