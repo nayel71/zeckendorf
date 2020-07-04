@@ -32,7 +32,9 @@ static int help(const char *progname) {
 
 // checks if z is a valid Zeckendorf representation (see zeckendorf.h for details)
 static bool is_valid(const char *z) {
-	if (z[0] != ONE) return false;
+	if (z[0] != ONE) {
+		return false;
+	}
 	for (int index = strlen(z) - 1; index > 0; index--) {
 		if (z[index] < ZERO || z[index] > ONE || z[index] - ZERO + z[index-1] - ZERO > 1) {
 			return false;
