@@ -1,7 +1,9 @@
 #include "../include/zeckendorf.h"
+#include <stdlib.h>
+#include <string.h>
 
 int z_pow(const z_int n) {
-	char *const rep = zeckendorf(n);
+	z_rep const rep = zeckendorf(n);
 	const int len = strlen(rep);
 	int pow = 1;
 	for (int k = 2; k <= len / 2; k++) { // k is the number of blocks

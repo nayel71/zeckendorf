@@ -1,39 +1,41 @@
 #include "../include/zeckendorf.h"
-
-// digit constants:
-const char ZERO = '0';
-const char ONE = '1';
-static const char TWO = '2';
-static const char THREE = '3';
+#include "add.h"
+#include <stdlib.h>
+#include <string.h>
 
 // cf. paper by Frougny et al.
 
-// add_same_len(str1, str2, len) returns the sum of str1 and str2
-// requires: str1 and str2 are Zeckendorf representations with possible leading ZEROs, len == strlen(str1) == strlen(str2)
-// effects: allocates memory (caller must free)
-static char *add_same_len(const char *str1, const char *str2, const int len) {
-	if (str1[0] == ONE && str2[0] == ONE) {
-		char *cpy1 = malloc((len + 2) * sizeof(char));
-		cpy1[0] = ZERO;
-		memcpy(cpy1 + 1, str1, len + 1);
-		char *cpy2 = malloc((len + 2) * sizeof(char));
-		cpy2[0] = ZERO;
-		memcpy(cpy2 + 1, str2, len + 1);
-		char *ans = add_same_len(cpy1, cpy2, len + 1);
-		free(cpy1);
-		free(cpy2);
+// add_same_len(z1, z2, len, res_len) returns the sum of z1 and z2 and stores its length and res_len
+// requires: z1 and z2 are Zeckendorf representations with possible leading ZEROs, len == strlen(z1) == strlen(z2)
+// effects: allocates memory (caller must free), updates res_len if res_len != NULL
+static z_rep add_same_len(const z_rep z1, const z_rep z2, const int len, int *res_len) {
+	const z_digit TWO = ONE + 1;
+	const z_digit THREE = TWO + 1;
+
+	if (z1[0] == ONE && z2[0] == ONE) {
+		z_rep cp1 = malloc((len + 2) * sizeof(ZERO));
+		cp1[0] = ZERO;
+		memcpy(cp1 + 1, z1, len + 1);
+
+		z_rep cp2 = malloc((len + 2) * sizeof(ZERO));
+		cp2[0] = ZERO;
+		memcpy(cp2 + 1, z2, len + 1);
+
+		z_rep ans = add_same_len(cp1, cp2, len + 1, res_len);
+		free(cp1);
+		free(cp2);
 		return ans;
 	}
 	
-	char *ans = malloc((len + 2) * sizeof(char)); 
+	z_rep ans = malloc((len + 2) * sizeof(ZERO)); 
 	ans[0] = ZERO; 
 	ans[len + 1] = '\0';
 	
 	// add pointwise
 	for (int i = 1; i <= len; i++) {
-		if (str1[i - 1] != str2[i - 1]) {
+		if (z1[i - 1] != z2[i - 1]) {
 			ans[i] = ONE;
-		} else if (str1[i - 1] == str2[i - 1] && str1[i - 1] == ONE) {
+		} else if (z1[i - 1] == z2[i - 1] && z1[i - 1] == ONE) {
 			ans[i] = TWO;
 		} else {
 			ans[i] = ZERO;
@@ -108,30 +110,36 @@ static char *add_same_len(const char *str1, const char *str2, const int len) {
 	}
 
 	// remove leading ZEROs
-	char *pos = memchr(ans, ONE, len + 1);
+	z_digit *pos = memchr(ans, ONE, len + 1);
 	memmove(ans, pos, len + 2 + ans - pos);
+	if (res_len) {
+		*res_len = len + 1 + ans - pos;
+	}
 	return ans;
 }
 
-// add_len(str1, str2, len1, len2) returns the sum of str1 and str2
-// requires: str1 and str2 are Zeckendorf representations, len1 == strlen(str1), len2 == strlen(str2)
-// effects: allocates memory (caller must free)
-static char *add_len(const char *str1, const char *str2, const int len1, const int len2) {
+z_rep add_len(const z_rep z1, const z_rep z2, const int len1, const int len2, int *len) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
-		char *cpy = malloc((len1 + 1) * sizeof(char));
-		memset(cpy, ZERO, len1 - len2);
-		memcpy(cpy + len1 - len2, str2, len2 + 1);
-		char *ans = add_same_len(str1, cpy, len1);
-		free(cpy);
+		z_rep cp = malloc((len1 + 1) * sizeof(ZERO));
+		memset(cp, ZERO, len1 - len2);
+		memcpy(cp + len1 - len2, z2, len2 + 1);
+		z_rep ans = add_same_len(z1, cp, len1, len);
+		free(cp);
 		return ans;
 	} else if (len1 < len2) {
-		return add_len(str2, str1, len2, len1);
+		return add_len(z2, z1, len2, len1, len);
 	} else {
-		return add_same_len(str1, str2, len1);
+		return add_same_len(z1, z2, len1, len);
 	}
 }
 
-char *z_add(const char *str1, const char *str2) {
-	return add_len(str1, str2, strlen(str1), strlen(str2));
+z_rep z_add(const z_rep z1, const z_rep z2) {
+	if (!z_rep_is_valid(z1)) {
+		exit(z_error(REP, z1));
+	} else if (!z_rep_is_valid(z2)) {
+		exit(z_error(REP, z2));
+	} else {
+		return add_len(z1, z2, strlen(z1), strlen(z2), NULL);
+	}
 }

@@ -1,18 +1,23 @@
 #include "../include/zeckendorf.h"
+#include "add.h"
+#include <stdlib.h>
+#include <string.h>
 
-// easy_mul(str1, str2, len1, len2) returns the product of str1 and str2
+// easy_mul(str1, str2, len1, len2, len) returns the product of str1 and str2 and stores its length at len
 // requires: str1 and str2 are Zeckendorf representations containing a single ONE, len1 == strlen(str1), len2 == strlen(str2)
-// effects: allocates memory (caller must free)
-static char *easy_mul(const char *str1, const char *str2, const int len1, const int len2) {
+// effects: allocates memory (caller must free), updates len
+static z_rep easy_mul(const z_rep str1, const z_rep str2, const int len1, const int len2, int *len) {
 	if (len2 < len1) {
-		return easy_mul(str2, str1, len2, len1);
+		return easy_mul(str2, str1, len2, len1, len);
 	}
 
-	char *ans = malloc((len1 + len2) * sizeof(char));
+	*len = len1 + len2 - 1;
+	z_rep ans = malloc((*len + 1) * sizeof(ZERO));
+	ans[*len] = '\0';
+
 	const int ind1 = len1 + 1;
 	const int ind2 = len2 + 1;
 	const int rem = ind1 % 2;
-	ans[ind1 + ind2 - 3] = '\0';
 
 	for (int j = 0; j < 2 * ind1 - 4 - 2 * rem; j++) {
 		if (j % 4 == 0) {
@@ -42,11 +47,17 @@ static char *easy_mul(const char *str1, const char *str2, const int len1, const 
 	return ans;
 }
 
-char *z_mul(const char *str1, const char *str2) {
+z_rep z_mul(const z_rep str1, const z_rep str2) {
+	if (!z_rep_is_valid(str1)) {
+		exit(z_error(REP, str1));
+	} else if (!z_rep_is_valid(str2)) {
+		exit(z_error(REP, str2));
+	}
+
 	const int len1 = strlen(str1) + 1;
 	const int len2 = strlen(str2) + 1;
-	char fib1[len1 / 2][len1];
-	char fib2[len2 / 2][len2];
+	z_digit fib1[len1 / 2][len1];
+	z_digit fib2[len2 / 2][len2];
 	int lengths1[len1 / 2];
 	int lengths2[len2 / 2];
 	int n1 = 0; // number of ONEs in str1
@@ -75,16 +86,18 @@ char *z_mul(const char *str1, const char *str2) {
 	}
 
 	// multiply everything out
-	char *sum = malloc((len1 + len2) * sizeof(char));
+	z_rep sum = malloc((len1 + len2) * sizeof(ZERO));
 
 	for (int k = n2 - 1; k >= 0; k--) {
 		for (int j = n1 - 1; j >= 0; j--) {
-			char *summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k]);
+			int sum_len, summand_len;
+			z_rep summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k], &summand_len);
 			if (k == n2 - 1 && j == n1 - 1) {
-				strcpy(sum, summand);
+				memcpy(sum, summand, summand_len + 1);
+				sum_len = summand_len;
 			} else {
-				char *temp = z_add(sum, summand);
-				strcpy(sum, temp);
+				z_rep temp = add_len(sum, summand, sum_len, summand_len, &sum_len);
+				memcpy(sum, temp, sum_len + 1);
 				free(temp);
 			}
 			free(summand);
