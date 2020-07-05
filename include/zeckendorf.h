@@ -18,14 +18,14 @@ int z_pow(const z_int n);
 // requires: z_int_is_valid(n) 
 bool z_pal(const z_int n);
 
-// z_add(str1, str2) returns the sum of str1 and str2
-// requires: z_rep_is_valid(str1) && z_rep_is_valid(str2)
+// z_add(z1, z2) returns the sum of z1 and z2
+// requires: z_rep_is_valid(z1) && z_rep_is_valid(z2)
 // effects: allocates memory (caller must free)
-z_rep z_add(const z_rep str1, const z_rep str2);
+z_rep z_add(const z_rep z1, const z_rep z2);
 
-// z_mul(str1, str2) returns the product of str1 and str2
-// requires: z_rep_is_valid(str1) && z_rep_is_valid(str2)
+// z_mul(z1, z2) returns the product of z1 and z2
+// requires: z_rep_is_valid(z1) && z_rep_is_valid(z2)
 // effects: allocates memory (caller must free)
-z_rep z_mul(const z_rep str1, const z_rep str2);
+z_rep z_mul(const z_rep z1, const z_rep z2);
 
 #endif /* ZECKENDORF_H */
