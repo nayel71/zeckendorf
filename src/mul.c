@@ -87,10 +87,10 @@ z_rep z_mul(const z_rep z1, const z_rep z2) {
 
 	// multiply everything out
 	z_rep sum = malloc((len1 + len2) * sizeof(ZERO));
+	int sum_len, summand_len;
 
 	for (int k = n2 - 1; k >= 0; k--) {
 		for (int j = n1 - 1; j >= 0; j--) {
-			int sum_len, summand_len;
 			z_rep summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k], &summand_len);
 			if (k == n2 - 1 && j == n1 - 1) {
 				memcpy(sum, summand, summand_len + 1);
