@@ -1,4 +1,4 @@
-#include "../include/zeckendorf.h"
+#include "../include/arithmetic.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,16 +20,16 @@ int main(int argc, char **argv) {
 	}
 
 	char *command = argv[1];
-	z_rep ans = NULL;
+	zrep ans = NULL;
 
 	if (argc == 2) {
-		z_int n = strtozi(command);
-		ans = zeckendorf(n);
+		zint n = strtozi(command);
+		ans = z_rep(n);
 	} else if (strcmp(command, "pow") == 0 && argc == 3) {
-		z_int n = strtozi(argv[2]);
+		zint n = strtozi(argv[2]);
 		printf("%d\n", z_pow(n));
 	} else if (strcmp(command, "pal") == 0 && argc == 3) {
-		z_int n = strtozi(argv[2]);
+		zint n = strtozi(argv[2]);
 		if (z_pal(n)) {
 			puts("True");
 		} else {
@@ -49,9 +49,8 @@ int main(int argc, char **argv) {
 		return help(argv[0]);
 	}
 
-	int len;
-	if (ans && z_rep_is_valid(ans, &len, true)) {
-		// this will print ans to stdout
+	if (ans) {
+		z_print(ans);
 	}
 
 	free(ans);

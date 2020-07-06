@@ -1,10 +1,10 @@
 #include "../include/zeckendorf.h"
 #include <stdlib.h>
 
-bool z_pal(const z_int n) {
-	z_rep const rep = zeckendorf(n);
-	int len;
-	if (z_rep_is_valid(rep, &len, false)) {
+bool z_pal(const zint n) {
+	zrep const rep = z_rep(n);
+	if (zrep_is_valid(rep)) {
+		int len = z_length(rep);
 		for (int i = 0; i < len / 2; i++) {
 			if (rep[i] != rep[len - i - 1]) {
 				free(rep);

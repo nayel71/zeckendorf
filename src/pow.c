@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int z_pow(const z_int n) {
-	z_rep const rep = zeckendorf(n);
-	int len;
-	if (z_rep_is_valid(rep, &len, false)) {
+int z_pow(const zint n) {
+	zrep const rep = z_rep(n);
+	if (zrep_is_valid(rep)) {
+		int len = z_length(rep);
 		int pow = 1;
 		for (int k = 2; k <= len / 2; k++) { // k is the number of blocks
 			if (len % k == 0) {
