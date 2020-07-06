@@ -49,8 +49,10 @@ int main(int argc, char **argv) {
 		return help(argv[0]);
 	}
 
-	if (ans) {
-		z_print(ans);
-		free(ans);
+	int len;
+	if (ans && z_rep_is_valid(ans, &len, true)) {
+		// this will print ans to stdout
 	}
+
+	free(ans);
 }

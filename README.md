@@ -6,7 +6,7 @@ Every positive integer has a unique representation as a sum of non-consecutive F
 - Check if the Zeckendorf representation of `n` is a power/palindrome.
 - Compute the sum/product of an arbitrary number of Zeckendorf representations.
 
-See `zeckendorf.h` and the paper by Frougny et al. for details.
+See `zeckendorf.h` and [the paper](AhlbachUsatineFrougnyPippenger.pdf) for details.
 
 ## Installation
 
@@ -29,7 +29,7 @@ Usage:
 
 ## API
 
-`zeckendorf.h` contains the public API below. To use the API in your project, `#include "../include/zeckendorf.h"` and replace `main.c` with your source file(s).
+`zeckendorf.h` contains the public API below. To use it in your project, replace `main.c` with your source file(s) and `#include "../include/zeckendorf.h"`.
 
 ```C
 #include <stdbool.h>
@@ -58,5 +58,4 @@ z_rep z_add(const z_rep z1, const z_rep z2);
 // requires: z_rep_is_valid(z1) && z_rep_is_valid(z2)
 // effects: allocates memory (caller must free)
 z_rep z_mul(const z_rep z1, const z_rep z2);
-
 ```

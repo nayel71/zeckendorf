@@ -4,7 +4,7 @@
 #include <string.h>
 
 // easy_mul(z1, z2, len1, len2, len) returns the product of z1 and z2 and stores its length at len
-// requires: z1 and z2 are Zeckendorf representations containing a single ONE, len1 == strlen(z1), len2 == strlen(z2)
+// requires: z1 and z2 are Zeckendorf representations of lengths len1 and len2 respectively, each containing a single ONE
 // effects: allocates memory (caller must free), updates len
 static z_rep easy_mul(const z_rep z1, const z_rep z2, const int len1, const int len2, int *len) {
 	if (len2 < len1) {
@@ -12,7 +12,7 @@ static z_rep easy_mul(const z_rep z1, const z_rep z2, const int len1, const int 
 	}
 
 	*len = len1 + len2 - 1;
-	z_rep ans = malloc((*len + 1) * sizeof(ZERO));
+	z_rep ans = malloc((*len + 1) * sizeof(z_digit));
 	ans[*len] = '\0';
 
 	const int ind1 = len1 + 1;
@@ -48,14 +48,15 @@ static z_rep easy_mul(const z_rep z1, const z_rep z2, const int len1, const int 
 }
 
 z_rep z_mul(const z_rep z1, const z_rep z2) {
-	if (!z_rep_is_valid(z1)) {
+	int len1, len2;
+	if (!z_rep_is_valid(z1, &len1, false)) {
 		exit(z_error(REP, z1));
-	} else if (!z_rep_is_valid(z2)) {
+	} else if (!z_rep_is_valid(z2, &len2, false)) {
 		exit(z_error(REP, z2));
 	}
 
-	const int len1 = strlen(z1) + 1;
-	const int len2 = strlen(z2) + 1;
+	len1++;
+	len2++;
 	z_digit fib1[len1 / 2][len1];
 	z_digit fib2[len2 / 2][len2];
 	int lengths1[len1 / 2];
@@ -68,7 +69,7 @@ z_rep z_mul(const z_rep z1, const z_rep z2) {
 		if (z1[i] == ONE) {
 			fib1[n1][0] = ONE;
 			lengths1[n1] = len1 - i - 1;
-			memset(fib1[n1] + 1, ZERO, lengths1[n1]);
+			memset(fib1[n1] + 1, ZERO, lengths1[n1] * sizeof(z_digit));
 			fib1[n1][lengths1[n1]] = '\0';
 			n1++;
 		} 
@@ -79,25 +80,24 @@ z_rep z_mul(const z_rep z1, const z_rep z2) {
 		if (z2[i] == ONE) {
 			fib2[n2][0] = ONE;
 			lengths2[n2] = len2 - i - 1;
-			memset(fib2[n2] + 1, ZERO, lengths2[n2]);
+			memset(fib2[n2] + 1, ZERO, lengths2[n2] * sizeof(z_digit));
 			fib2[n2][lengths2[n2]] = '\0';
 			n2++;
 		} 
 	}
 
 	// multiply everything out
-	z_rep sum = malloc((len1 + len2) * sizeof(ZERO));
+	z_rep sum = malloc((len1 + len2) * sizeof(z_digit)), summand = NULL;
 	int sum_len, summand_len;
-
 	for (int k = n2 - 1; k >= 0; k--) {
 		for (int j = n1 - 1; j >= 0; j--) {
-			z_rep summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k], &summand_len);
+			summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k], &summand_len);
 			if (k == n2 - 1 && j == n1 - 1) {
-				memcpy(sum, summand, summand_len + 1);
+				memcpy(sum, summand, (summand_len + 1) * sizeof(z_digit));
 				sum_len = summand_len;
 			} else {
 				z_rep temp = add_len(sum, summand, sum_len, summand_len, &sum_len);
-				memcpy(sum, temp, sum_len + 1);
+				memcpy(sum, temp, (sum_len + 1) * sizeof(z_digit));
 				free(temp);
 			}
 			free(summand);

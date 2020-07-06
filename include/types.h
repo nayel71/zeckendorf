@@ -16,10 +16,12 @@ extern const z_digit ONE;
 // returns true if z is a Zeckendorf representation, and false otherwise
 // (a Zeckendorf representation is a binary string consisting of ZEROs and ONEs,
 // that starts with ONE and does not contain consecutive ONEs)
-bool z_rep_is_valid(const z_rep z);
+// effects: if the return value is true, also updates *len with the length of z
+// additionally, if print == true, prints z to stdout
+bool z_rep_is_valid(const z_rep z, int *len, bool print);
 
 // returns true if 0 < n <= LIMIT, and false otherwise
-bool z_int_is_valid(z_int n);
+bool z_int_is_valid(const z_int n);
 
 // prints an error message to stderr and returns EXIT_FAILURE
 int z_error(error_t err, const char *param);
@@ -29,8 +31,5 @@ z_int strtozi(const char *str);
 
 // tries to convert str to a valid z_rep; if unsuccessful, calls exit(z_error(REP, str))
 z_rep strtozr(const char *str);
-
-// prints z to stdout
-void z_print(z_rep z);
 
 #endif /* TYPES_H */
