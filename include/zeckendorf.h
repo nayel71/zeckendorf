@@ -1,11 +1,9 @@
 #ifndef ZECKENDORF_H
 #define ZECKENDORF_H
 
+#include "types.h"
 #include <stdbool.h>
 
-typedef long long zint;
-typedef char zdigit;
-typedef zdigit *zrep;
 typedef enum {BOUND, REP} error_t;
 
 // constants:
@@ -28,12 +26,12 @@ bool zint_is_valid(const zint n);
 
 // strtozi(str) tries to convert str to a valid zint
 // if successful, returns the converted value
-// if unsuccessful, calls exit(z_error(BOUND, str))
+// if unsuccessful, calls exit(z_error(BOUND, str)) (see below)
 zint strtozi(const char *str);
 
 // strtozr(str) tries to convert str to a valid zrep
 // if successful, returns the converted value
-// if unsuccessful, calls exit(z_error(REP, str))
+// if unsuccessful, calls exit(z_error(REP, str)) (see below)
 zrep strtozr(const char *str);
 
 // z_length(z) returns the length of z
