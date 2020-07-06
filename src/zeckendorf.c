@@ -16,7 +16,6 @@ bool zint_is_valid(const zint n) {
 // returns false if z is not a valid Zeckendorf representation
 static bool iterate(const zrep z, int *len, bool print) {
 	zrep it = z;
-	*len = 0;
 	if (*it != ONE) {
 		return false;
 	}
