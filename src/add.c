@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// cf. algorithm.pdf
+// cf. the paper by Frougny et al.
 
 // add_same_len(z1, z2, len, res_len) returns the sum of z1 and z2 and stores its length and res_len
 // requires: z1 and z2 are Zeckendorf representations with possible leading ZEROs having equal length len
