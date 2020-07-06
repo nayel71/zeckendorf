@@ -64,12 +64,12 @@ int z_error(error_t err, const char *param);
 // z_add(z1, z2) returns the sum of z1 and z2
 // requires: z_rep_is_valid(z1) && z_rep_is_valid(z2)
 // effects: allocates memory (caller must free)
-z_rep z_add(const z_rep z1, const z_rep z2);
+zrep z_add(const zrep z1, const zrep z2);
 
 // z_mul(z1, z2) returns the product of z1 and z2
 // requires: z_rep_is_valid(z1) && z_rep_is_valid(z2)
 // effects: allocates memory (caller must free)
-z_rep z_mul(const z_rep z1, const z_rep z2);
+zrep z_mul(const zrep z1, const zrep z2);
 ```
 
 ## Installation
