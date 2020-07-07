@@ -51,7 +51,6 @@ int main(int argc, char **argv) {
 
 	if (ans) {
 		z_print(ans);
+		free(ans);
 	}
-
-	free(ans);
 }
