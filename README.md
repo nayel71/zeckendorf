@@ -7,7 +7,7 @@ Every positive integer has a unique representation as a sum of non-consecutive F
 ```C
 // zeckendorf.h
 
-typedef enum {BOUND, REP} error_t;
+typedef enum {BOUND, REP} zerror_t;
 
 // constants:
 extern const zint LIMIT;
@@ -43,7 +43,7 @@ int z_length(const zrep z);
 
 // z_print(z) prints z to stdout
 // requires: zrep_is_valid(z)
-// effects: prints output
+// effects: prints to stdout
 void z_print(const zrep z);
 
 // z_pow(n) returns the largest integer k such that z_rep(n) is a k-power
@@ -57,7 +57,8 @@ bool z_pal(const zint n);
 
 // z_error(err, param) prints an error message regarding err and param to stderr
 // and returns EXIT_FAILURE
-int z_error(error_t err, const char *param);
+// effects: prints to stderr
+int z_error(zerror_t err, const char *param);
 
 // arithmetic.h
 

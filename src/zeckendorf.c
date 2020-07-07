@@ -71,14 +71,14 @@ zrep strtozr(const char *str) {
 }
 
 // returns an error message based on the error type
-static const char *message(error_t err) {
+static const char *message(zerror_t err) {
 	switch (err) {
 		case BOUND: return "out-of-range argument";
 		case REP:   return "invalid Zeckendorf representation";
 	}
 }
 
-int z_error(error_t err, const char *param) {
-	fprintf(stderr, "Error: %s %s\n", message(err), param);
+int z_error(zerror_t err, const char *param) {
+	fprintf(stderr, "Zeckendorf Error: %s %s\n", message(err), param);
 	return EXIT_FAILURE;
 }
