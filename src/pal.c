@@ -13,8 +13,8 @@ bool z_pal(const zint n) {
 		}
 		free(rep);
 		return true;
+	} else {
+		free(rep);
+		exit(z_error(REP, rep));
 	}
-	// should not get here
-	free(rep);
-	exit(z_error(REP, rep));
 }

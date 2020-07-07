@@ -1,6 +1,5 @@
 #include "../include/zeckendorf.h"
 #include <stdlib.h>
-#include <string.h>
 
 int z_pow(const zint n) {
 	zrep const rep = z_rep(n);
@@ -24,8 +23,8 @@ int z_pow(const zint n) {
 		}
 		free(rep);
 		return pow;
+	} else {
+		free(rep);
+		exit(z_error(REP, rep));
 	}
-	// we should not get here
-	free(rep);
-	exit(z_error(REP, rep));
 }

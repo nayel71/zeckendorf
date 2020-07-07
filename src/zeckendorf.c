@@ -1,7 +1,6 @@
 #include "../include/zeckendorf.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 const zint LIMIT = 9217463444206948444;
 const zdigit ZERO = '0';
