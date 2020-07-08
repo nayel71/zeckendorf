@@ -14,24 +14,28 @@ static void maxfib(const zint n, int *index, zint *fib) {
 }
 
 zrep z_rep(const zint n) {
-	int index;
-	zint fib;
-	maxfib(n, &index, &fib);
+	if (zint_is_valid(n)) {
+		int index;
+		zint fib;
+		maxfib(n, &index, &fib);
 
-	zrep ans = malloc(index * sizeof(zdigit));
+		zrep ans = malloc(index * sizeof(zdigit));
 
-	int i = 0;
-	zint rem = n;
-	for (int next_index; rem > 0; maxfib(rem, &index, &fib)) {
-		rem -= fib;
-		maxfib(rem, &next_index, &fib);
-		ans[i] = ONE;
-		i++;
-		for (int j = index - 1; j > next_index; j--, i++) {
-			ans[i] = ZERO;
-		}
-		
-	} 
-	ans[i] = '\0'; // at this point, i == original index - 1 
-	return ans;
+		int i = 0;
+		zint rem = n;
+		for (int next_index; rem > 0; maxfib(rem, &index, &fib)) {
+			rem -= fib;
+			maxfib(rem, &next_index, &fib);
+			ans[i] = ONE;
+			i++;
+			for (int j = index - 1; j > next_index; j--, i++) {
+				ans[i] = ZERO;
+			}
+			
+		} 
+		ans[i] = '\0'; // at this point, i == original index - 1 
+		return ans;
+	} else {
+		return NULL;
+	}
 }

@@ -15,10 +15,11 @@ bool zint_is_valid(const zint n) {
 // returns false if z is not a valid Zeckendorf representation
 static bool iterate(const zrep z, int *len, bool print) {
 	zrep it = z;
-	if (*it != ONE) {
+	*len = 0;
+	if (!it || *it != ONE) {
 		return false;
 	}
-	for (*len = 0; *it; ++*len, ++it) {
+	for (; *it; ++*len, ++it) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it + 1) - ZERO > 1) {
 			return false;
 		} else if (print) {
@@ -41,15 +42,13 @@ int z_length(const zrep z) {
 	if (iterate(z, &len, false)) {
 		return len;
 	} else {
-		exit(z_error(REP, z));
+		return 0;
 	}
 }
 
 void z_print(const zrep z) {
 	int len;
-	if (!iterate(z, &len, true)) {
-		exit(z_error(REP, z));
-	}
+	iterate(z, &len, true);
 }
 
 zint strtozi(const char *str) {
@@ -57,7 +56,7 @@ zint strtozi(const char *str) {
 	if (zint_is_valid(n)) {
 		return n;
 	} else {
-		exit(z_error(BOUND, str));
+		return 0;
 	}
 }
 
@@ -66,19 +65,6 @@ zrep strtozr(const char *str) {
 	if (zrep_is_valid(z)) {
 		return z;
 	} else {
-		exit(z_error(REP, str));
+		return NULL;
 	}
-}
-
-// returns an error message based on the error type
-static const char *message(zerror_t err) {
-	switch (err) {
-		case BOUND: return "out-of-range argument";
-		case REP:   return "invalid Zeckendorf representation";
-	}
-}
-
-int z_error(zerror_t err, const char *param) {
-	fprintf(stderr, "Zeckendorf Error: %s %s\n", message(err), param);
-	return EXIT_FAILURE;
 }

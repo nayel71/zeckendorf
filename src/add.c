@@ -135,11 +135,8 @@ zrep add_len(const zrep z1, const zrep z2, const int len1, const int len2, int *
 }
 
 zrep z_add(const zrep z1, const zrep z2) {
-	if (!zrep_is_valid(z1)) {
-		exit(z_error(REP, z1));
-	} else if (!zrep_is_valid(z2)) {
-		exit(z_error(REP, z2));
-	} else {
-		return add_len(z1, z2, z_length(z1), z_length(z2), NULL);
+	if (!zrep_is_valid(z1) || !zrep_is_valid(z2)) {
+		return NULL;
 	}
+	return add_len(z1, z2, z_length(z1), z_length(z2), NULL);
 }

@@ -23,8 +23,7 @@ int z_pow(const zint n) {
 		}
 		free(rep);
 		return pow;
-	} else {
-		free(rep);
-		exit(z_error(REP, rep));
+	} else { // should not get here
+		return 0;
 	}
 }

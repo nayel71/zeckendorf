@@ -48,10 +48,8 @@ static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len
 }
 
 zrep z_mul(const zrep z1, const zrep z2) {
-	if (!zrep_is_valid(z1)) {
-		exit(z_error(REP, z1));
-	} else if (!zrep_is_valid(z2)) {
-		exit(z_error(REP, z2));
+	if (!zrep_is_valid(z1) || !zrep_is_valid(z2)) {
+		return NULL;
 	}
 
 	int len1 = z_length(z1) + 1;
