@@ -36,14 +36,22 @@ int main(int argc, char **argv) {
 			puts("False");
 		}
 	} else if (strcmp(command, "add") == 0 && argc > 3) {
-		ans = strtozr(argv[2]);
-		for (int i = 3; i < argc; i++) {
-			ans = z_add(ans, strtozr(argv[i]));
+		ans = z_add(strtozr(argv[2]), strtozr(argv[3]));
+		for (int i = 4; i < argc; i++) {
+			zrep temp = z_add(ans, strtozr(argv[i]));
+			int len = z_length(temp);
+			ans = realloc(ans, (len + 1) * sizeof(zdigit));
+			memcpy(ans, temp, (len + 1) * sizeof(zdigit));
+			free(temp);
 		}
 	} else if (strcmp(command, "mul") == 0 && argc > 3) {
-		ans = strtozr(argv[2]);
-		for (int i = 3; i < argc; i++) {
-			ans = z_mul(ans, strtozr(argv[i]));
+		ans = z_mul(strtozr(argv[2]), strtozr(argv[3]));
+		for (int i = 4; i < argc; i++) {
+			zrep temp = z_mul(ans, strtozr(argv[i]));
+			int len = z_length(temp);
+			ans = realloc(ans, (len + 1) * sizeof(zdigit));
+			memcpy(ans, temp, (len + 1) * sizeof(zdigit));
+			free(temp);
 		}
 	} else {
 		return help(argv[0]);
