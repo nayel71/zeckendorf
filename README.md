@@ -46,10 +46,10 @@ zrep z_rep(const zint n);
 // returns 0 otherwise
 int z_length(const zrep z);
 
-// z_print(z) prints z to stdout and returns true if zrep_is_valid(z)
-// returns false otherwise
+// z_print(z) prints z to stdout 
+// requires: zrep_is_valid(z)
 // effects: may print to stdout
-bool z_print(const zrep z);
+void z_print(const zrep z);
 
 // z_pow(n) returns the largest integer k such that z_rep(n) is a k-power
 // i.e. of the form xx...xx (k repeated blocks) for some string x
