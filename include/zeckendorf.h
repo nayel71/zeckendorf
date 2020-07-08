@@ -39,8 +39,8 @@ bool zrep_is_valid(const zrep z);
 // effects: allocates memory (caller must free) if return value is not NULL
 zrep z_rep(const zint n);
 
-// z_length(z) returns the length of z if zrep_is_valid(z)
-// returns 0 otherwise
+// z_length(z) returns the length of z
+// requires: zrep_is_valid(z)
 int z_length(const zrep z);
 
 // z_print(z) prints z to stdout 
