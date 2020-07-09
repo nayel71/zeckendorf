@@ -4,8 +4,8 @@
 #include <string.h>
 
 // easy_mul(z1, z2, len1, len2, len) returns the product of z1 and z2 and stores its length at len
-// requires: zrep_is_valid(z1) && zrep_is_valid(z2) && z_length(z1) == len1 && z_length(z2) == len2 && len;
-// furthermore, z1 and z2 each contain a single ONE
+// requires: zrep_is_valid(z1) && zrep_is_valid(z2) && z_length(z1) == len1 && z_length(z2) == len2 && len
+// and z1 and z2 each contain a single ONE
 // effects: allocates memory (caller must free), updates *len
 static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len2, int *len) {
 	if (len2 < len1) {
@@ -53,59 +53,85 @@ zrep z_mul(const zrep z1, const zrep z2) {
 		return NULL;
 	}
 
-	int len1 = z_length(z1) + 1;
-	int len2 = z_length(z2) + 1;
-	zdigit fib1[len1 / 2][len1];
-	zdigit fib2[len2 / 2][len2];
-	int lengths1[len1 / 2];
-	int lengths2[len2 / 2];
+	// split z1 and z2 into sums of Fibonacci numbers, then multiply everything out
+	int len1 = z_length(z1);
+	int len2 = z_length(z2);
+
 	int n1 = 0; // number of ONEs in z1
 	int n2 = 0; // number of ONEs in z2
 
-	// split first string into a sum of Fibonacci numbers
 	for (int i = 0; i < len1; i++) {
 		if (z1[i] == ONE) {
-			fib1[n1][0] = ONE;
-			lengths1[n1] = len1 - i - 1;
-			if (lengths1[n1] > 1) {
-				memset(fib1[n1] + 1, ZERO, (lengths1[n1] - 1) * sizeof(zdigit));
-			}
-			fib1[n1][lengths1[n1]] = '\0';
 			n1++;
 		} 
 	}
 
-	// split second string into a sum of Fibonacci numbers
 	for (int i = 0; i < len2; i++) {
 		if (z2[i] == ONE) {
-			fib2[n2][0] = ONE;
-			lengths2[n2] = len2 - i - 1;
-			if (lengths2[n2] > 1) {
-				memset(fib2[n2] + 1, ZERO, (lengths2[n2] - 1) * sizeof(zdigit));
-			}
-			fib2[n2][lengths2[n2]] = '\0';
 			n2++;
 		} 
 	}
 
-	// multiply everything out
-	zrep sum = malloc((len1 + len2) * sizeof(zdigit));
+	zrep *fibs1 = malloc(n1 * sizeof(zrep));
+	zrep *fibs2 = malloc(n2 * sizeof(zrep));
+	int  *lens1 = malloc(n1 * sizeof(int));
+	int  *lens2 = malloc(n2 * sizeof(int));
+
+	for (int i = 0, m1 = 0; i < len1; i++) {
+		if (z1[i] == ONE) {
+			lens1[m1] = len1 - i;
+			fibs1[m1] = malloc((lens1[m1] + 1) * sizeof(zdigit));
+			fibs1[m1][0] = ONE;
+			memset(fibs1[m1] + 1, ZERO, (lens1[m1] - 1) * sizeof(zdigit));
+			fibs1[m1][lens1[m1]] = '\0';
+			m1++;
+		}
+	}
+
+	for (int i = 0, m2 = 0; i < len2; i++) {
+		if (z2[i] == ONE) {
+			lens2[m2] = len2 - i;
+			fibs2[m2] = malloc((lens2[m2] + 1) * sizeof(zdigit));
+			fibs2[m2][0] = ONE;
+			memset(fibs2[m2] + 1, ZERO, (lens2[m2] - 1) * sizeof(zdigit));
+			fibs2[m2][lens2[m2]] = '\0';
+			m2++;
+		}
+	}
+
+	zrep sum;
 	int sum_len;
-	int summand_len;
 	for (int k = n2 - 1; k >= 0; k--) {
 		for (int j = n1 - 1; j >= 0; j--) {
-			zrep summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k], &summand_len);
+			int summand_len;
+			zrep summand = easy_mul(fibs1[j], fibs2[k], lens1[j], lens2[k], &summand_len);
 			if (k == n2 - 1 && j == n1 - 1) {
-				memcpy(sum, summand, (summand_len + 1) * sizeof(zdigit));
 				sum_len = summand_len;
+				sum = malloc((sum_len + 1) * sizeof(zdigit));
+				memcpy(sum, summand, (summand_len + 1) * sizeof(zdigit));
 			} else {
 				zrep temp = add_len(sum, summand, sum_len, summand_len, &sum_len);
+				sum = realloc(sum, (sum_len + 1) * sizeof(zdigit));
 				memcpy(sum, temp, (sum_len + 1) * sizeof(zdigit));
 				free(temp);
 			}
 			free(summand);
 		}
 	}
+
+	// clean-up
+	for (int i = 0; i < n1; i++) {
+		free(fibs1[i]);
+	}
+
+	for (int i = 0; i < n2; i++) {
+		free(fibs2[i]);
+	}
+
+	free(fibs1);
+	free(fibs2);
+	free(lens1);
+	free(lens2);
 
 	return sum;
 }
