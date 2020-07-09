@@ -19,7 +19,7 @@ static int z_error(zerror_t err, const char *param) {
 	return EXIT_FAILURE;
 }
 
-// prints a list of commands and returns EXIT_FAILURE
+// prints a list of commands to stderr and returns EXIT_FAILURE
 static int help(const char *progname) {
 	fprintf(stderr, "Usage:\n");
 	fprintf(stderr, "%s n computes the Zeckendorf representation of n\n", progname);
