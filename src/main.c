@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 		zint n = strtozi(argv[2]);
 		if (zint_is_valid(n) && z_pal(n)) {
 			puts("True");
-		} else if (n) {
+		} else if (zint_is_valid(n)) {
 			puts("False");
 		} else {
 			return z_error(BOUND, argv[2]);
