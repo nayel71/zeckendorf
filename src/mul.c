@@ -67,7 +67,9 @@ zrep z_mul(const zrep z1, const zrep z2) {
 		if (z1[i] == ONE) {
 			fib1[n1][0] = ONE;
 			lengths1[n1] = len1 - i - 1;
-			memset(fib1[n1] + 1, ZERO, lengths1[n1] * sizeof(zdigit));
+			if (lengths1[n1] > 1) {
+				memset(fib1[n1] + 1, ZERO, (lengths1[n1] - 2) * sizeof(zdigit));
+			}
 			fib1[n1][lengths1[n1]] = '\0';
 			n1++;
 		} 
@@ -78,7 +80,9 @@ zrep z_mul(const zrep z1, const zrep z2) {
 		if (z2[i] == ONE) {
 			fib2[n2][0] = ONE;
 			lengths2[n2] = len2 - i - 1;
-			memset(fib2[n2] + 1, ZERO, lengths2[n2] * sizeof(zdigit));
+			if (lengths2[n2] > 1) {
+				memset(fib2[n2] + 1, ZERO, (lengths2[n2] - 2) * sizeof(zdigit));
+			}
 			fib2[n2][lengths2[n2]] = '\0';
 			n2++;
 		} 
