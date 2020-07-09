@@ -3,7 +3,7 @@
 
 bool z_pal(const zint n) {
 	zrep const rep = z_rep(n);
-	if (zrep_is_valid(rep)) {
+	if (rep) {
 		int len = z_length(rep);
 		for (int i = 0; i < len / 2; i++) {
 			if (rep[i] != rep[len - i - 1]) {

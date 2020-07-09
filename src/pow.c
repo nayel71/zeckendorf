@@ -3,7 +3,7 @@
 
 int z_pow(const zint n) {
 	zrep const rep = z_rep(n);
-	if (zrep_is_valid(rep)) {
+	if (rep) {
 		int len = z_length(rep);
 		int pow = 1;
 		for (int k = 2; k <= len / 2; k++) { // k is the number of blocks

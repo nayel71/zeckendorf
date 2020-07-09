@@ -49,7 +49,7 @@ static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len
 }
 
 zrep z_mul(const zrep z1, const zrep z2) {
-	if (!zrep_is_valid(z1) || !zrep_is_valid(z2)) {
+	if (!z1 || !z2) {
 		return NULL;
 	}
 
