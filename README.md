@@ -13,29 +13,28 @@ extern const zdigit ZERO;
 extern const zdigit ONE;
 
 // definitions:
-// (formal)
-// - a zint is a non-zero return value of strtozi
-// - a zrep is a non-NULL return value of strtozr
-// (informal)
-// - a zint is is a positive integer <= LIMIT
+// - a zint is a either zero or a non-zero return value of strtozi
+// - a zrep is a either NULL or a non-NULL return value of strtozr
+// informally,
+// - a zint is a non-negative integer <= LIMIT
 // - a zrep is a binary string consisting of ZEROs and ONEs,
 //   that starts with ONE and does not contain consecutive ONEs
 
-// strtozi(str) tries to convert str to a zint
-// returns the converted value if successful, returns 0 otherwise
+// strtozi(str) tries to convert str to a non-zero zint
+// returns the converted value if successful, returns zero otherwise
 zint strtozi(const char *str);
 
-// strtozr(str) tries to convert str to a zrep
+// strtozr(str) tries to convert str to a non-NULL zrep
 // returns the converted value if successful, returns NULL otherwise
 zrep strtozr(const char *str);
 
-// zint_is_valid(n) returns true if n is a zint, returns false otherwise
+// zint_is_valid(n) returns true if n is a non-zero zint, returns false otherwise
 bool zint_is_valid(const zint n);
 
-// zrep_is_valid(z) returns true if z is a zrep, returns false otherwise
+// zrep_is_valid(z) returns true if z is a non-NULL zrep, returns false otherwise
 bool zrep_is_valid(const zrep z);
 
-// z_rep(n) returns the Zeckendorf representation of n if zint_is_valid(n)
+// z_rep(n) returns the Zeckendorf representation of n if n is a non-zero zint
 // returns NULL otherwise
 // effects: allocates memory (caller must free) if return value is not NULL
 zrep z_rep(const zint n);

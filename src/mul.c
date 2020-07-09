@@ -4,7 +4,8 @@
 #include <string.h>
 
 // easy_mul(z1, z2, len1, len2, len) returns the product of z1 and z2 and stores its length at len
-// requires: z1 and z2 are Zeckendorf representations of lengths len1 and len2 respectively, each containing a single ONE
+// requires: zrep_is_valid(z1) && zrep_is_valid(z2) && z_length(z1) == len1 && z_length(z2) == len2 && len;
+// furthermore, z1 and z2 each contain a single ONE
 // effects: allocates memory (caller must free), updates *len
 static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len2, int *len) {
 	if (len2 < len1) {
@@ -84,11 +85,12 @@ zrep z_mul(const zrep z1, const zrep z2) {
 	}
 
 	// multiply everything out
-	zrep sum = malloc((len1 + len2) * sizeof(zdigit)), summand = NULL;
-	int sum_len, summand_len;
+	zrep sum = malloc((len1 + len2) * sizeof(zdigit));
+	int sum_len;
+	int summand_len;
 	for (int k = n2 - 1; k >= 0; k--) {
 		for (int j = n1 - 1; j >= 0; j--) {
-			summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k], &summand_len);
+			zrep summand = easy_mul(fib1[j], fib2[k], lengths1[j], lengths2[k], &summand_len);
 			if (k == n2 - 1 && j == n1 - 1) {
 				memcpy(sum, summand, (summand_len + 1) * sizeof(zdigit));
 				sum_len = summand_len;

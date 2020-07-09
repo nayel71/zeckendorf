@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 	zrep ans = NULL;
 
 	if (argc == 2) {
-		zint n = strtozi(command);
+		zint n = strtozi(argv[1]);
 		if (n) {
 			ans = z_rep(n);
 		} else {
@@ -67,13 +67,13 @@ int main(int argc, char **argv) {
 		ans = z_add(z1, z2);
 		if (ans) {
 			for (int i = 4; i < argc; i++) {
-				zrep next = strtozr(argv[i]);
-				zrep temp = z_add(ans, next);
-				if (temp) {
-					int len = z_length(temp);
+				z1 = strtozr(argv[i]);
+				z2 = z_add(ans, z1);
+				if (z2) {
+					int len = z_length(z2);
 					ans = realloc(ans, (len + 1) * sizeof(zdigit));
-					memcpy(ans, temp, (len + 1) * sizeof(zdigit));
-					free(temp);
+					memcpy(ans, z2, (len + 1) * sizeof(zdigit));
+					free(z2);
 				} else {
 					free(ans);
 					return z_error(REP, argv[i]);
@@ -90,13 +90,13 @@ int main(int argc, char **argv) {
 		ans = z_mul(z1, z2);
 		if (ans) {
 			for (int i = 4; i < argc; i++) {
-				zrep next = strtozr(argv[i]);
-				zrep temp = z_mul(ans, next);
-				if (temp) {
-					int len = z_length(temp);
+				z1 = strtozr(argv[i]);
+				z2 = z_mul(ans, z1);
+				if (z2) {
+					int len = z_length(z2);
 					ans = realloc(ans, (len + 1) * sizeof(zdigit));
-					memcpy(ans, temp, (len + 1) * sizeof(zdigit));
-					free(temp);
+					memcpy(ans, z2, (len + 1) * sizeof(zdigit));
+					free(z2);
 				} else {
 					free(ans);
 					return z_error(REP, argv[i]);
