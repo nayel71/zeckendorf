@@ -5,7 +5,7 @@
 
 // easy_mul(z1, z2, len1, len2, len) returns the product of z1 and z2 and stores its length at len
 // requires: z1 and z2 are Zeckendorf representations of lengths len1 and len2 respectively, each containing a single ONE
-// effects: allocates memory (caller must free), updates len
+// effects: allocates memory (caller must free), updates *len
 static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len2, int *len) {
 	if (len2 < len1) {
 		return easy_mul(z2, z1, len2, len1, len);

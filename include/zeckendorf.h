@@ -26,12 +26,10 @@ zint strtozi(const char *str);
 // returns the converted value if successful, returns NULL otherwise
 zrep strtozr(const char *str);
 
-// zint_is_valid(n) returns true if n is a zint
-// returns false otherwise
+// zint_is_valid(n) returns true if n is a zint, returns false otherwise
 bool zint_is_valid(const zint n);
 
-// zrep_is_valid(z) returns true if z is a zrep
-// returns false otherwise
+// zrep_is_valid(z) returns true if z is a zrep, returns false otherwise
 bool zrep_is_valid(const zrep z);
 
 // z_rep(n) returns the Zeckendorf representation of n if zint_is_valid(n)

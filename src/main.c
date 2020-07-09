@@ -14,6 +14,7 @@ static const char *message(zerror_t err) {
 	}
 }
 
+// prints an error message to stderr and returns EXIT_FAILURE
 static int z_error(zerror_t err, const char *param) {
 	fprintf(stderr, "Zeckendorf Error: %s %s\n", message(err), param);
 	return EXIT_FAILURE;

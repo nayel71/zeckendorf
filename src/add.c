@@ -5,9 +5,9 @@
 
 // cf. paper by Frougny et al.
 
-// add_same_len(z1, z2, len, res_len) returns the sum of z1 and z2 and stores its length and res_len
+// add_same_len(z1, z2, len, res_len) returns the sum of z1 and z2 and stores its length at res_len
 // requires: z1 and z2 are Zeckendorf representations with possible leading ZEROs having equal length len
-// effects: allocates memory (caller must free), updates res_len if res_len != NULL
+// effects: allocates memory (caller must free), updates *res_len if res_len != NULL
 static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *res_len) {
 	const zdigit TWO = ONE + 1;
 	const zdigit THREE = TWO + 1;
