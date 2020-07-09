@@ -1,4 +1,3 @@
-#include "../include/zeckendorf.h"
 #include "../include/arithmetic.h"
 #include <stdio.h>
 #include <stdlib.h>
