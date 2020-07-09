@@ -13,8 +13,8 @@ extern const zdigit ZERO;
 extern const zdigit ONE;
 
 // definitions:
-// - a zint is a either zero or a non-zero return value of strtozi
-// - a zrep is a either NULL or a non-NULL return value of strtozr
+// - a zint is either zero or a non-zero return value of strtozi
+// - a zrep is either NULL or a non-NULL return value of strtozr
 // informally,
 // - a zint is a non-negative integer <= LIMIT
 // - a zrep is a binary string consisting of ZEROs and ONEs,
