@@ -23,6 +23,7 @@ zint strtozi(const char *str);
 
 // strtozr(str) tries to convert str to a non-NULL zrep
 // returns the converted value if successful, returns NULL otherwise
+// effects: allocates memory (caller must free) if return value is not NULL
 zrep strtozr(const char *str);
 
 // zint_is_valid(n) returns true if n is a non-zero zint, returns false otherwise
