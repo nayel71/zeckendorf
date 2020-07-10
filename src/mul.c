@@ -8,7 +8,9 @@
 // and z1 and z2 each contain a single ONE
 // effects: allocates memory (caller must free), updates *len
 static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len2, int *len) {
-	if (len2 < len1) {
+	if (!len) {
+		return NULL;
+	} else if (len2 < len1) {
 		return easy_mul(z2, z1, len2, len1, len);
 	}
 
