@@ -7,11 +7,8 @@ const zint LIMIT = 9217463444206948444;
 const zdigit ZERO = '0';
 const zdigit ONE = '1';
 
-bool zint_is_valid(const zint n) {
-	return n > 0 && n <= LIMIT;
-}
-
-bool zrep_is_valid(const zrep z) {
+// checks if z is a valid Zeckendorf representation
+static bool zrep_is_valid(const zrep z) {
 	zrep it = z;
 	if (!it || *it != ONE) {
 		return false;
@@ -34,7 +31,7 @@ void z_print(const zrep z) {
 
 zint strtozi(const char *str) {
 	zint n = strtoll(str, NULL, 0);
-	if (zint_is_valid(n)) {
+	if (n > 0 && n <= LIMIT) {
 		return n;
 	} else {
 		return 0;

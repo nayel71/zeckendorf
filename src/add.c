@@ -5,10 +5,10 @@
 
 // cf. paper by Frougny et al.
 
-// add_same_len(z1, z2, len, res_len) returns the sum of z1 and z2 and stores its length at res_len if res_len != NULL
-// requires: z1 and z2 are Zeckendorf representations with possible leading ZEROs having equal length len
-// effects: allocates memory (caller must free), updates *res_len if res_len != NULL
-static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *res_len) {
+// add_same_len(z1, z2, len, rlen) returns the sum of z1 and z2 and stores its length at rlen if rlen != NULL
+// requires: z1 and z2 are Zeckendorf representations with possible leading ZEROs, having equal length len
+// effects: allocates memory (caller must free), updates *rlen if rlen != NULL
+static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *rlen) {
 	const zdigit TWO = ONE + 1;
 	const zdigit THREE = TWO + 1;
 
@@ -21,7 +21,7 @@ static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *res_l
 		cp2[0] = ZERO;
 		memcpy(cp2 + 1, z2, (len + 1) * sizeof(zdigit));
 
-		zrep ans = add_same_len(cp1, cp2, len + 1, res_len);
+		zrep ans = add_same_len(cp1, cp2, len + 1, rlen);
 		free(cp1);
 		free(cp2);
 		return ans;
@@ -112,8 +112,8 @@ static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *res_l
 	// remove leading ZEROs
 	zdigit *pos = memchr(ans, ONE, (len + 1) * sizeof(zdigit));
 	memmove(ans, pos, (len + 2 + ans - pos) * sizeof(zdigit));
-	if (res_len) {
-		*res_len = len + 1 + ans - pos;
+	if (rlen) {
+		*rlen = len + 1 + ans - pos;
 	}
 	return ans;
 }
@@ -135,8 +135,5 @@ zrep add_len(const zrep z1, const zrep z2, const int len1, const int len2, int *
 }
 
 zrep z_add(const zrep z1, const zrep z2) {
-	if (!z1 || !z2) {
-		return NULL;
-	}
 	return add_len(z1, z2, z_length(z1), z_length(z2), NULL);
 }

@@ -4,13 +4,11 @@
 #include <string.h>
 
 // easy_mul(z1, z2, len1, len2, len) returns the product of z1 and z2 and stores its length at len
-// requires: zrep_is_valid(z1) && zrep_is_valid(z2) && z_length(z1) == len1 && z_length(z2) == len2 && len
+// requires: z1 != NULL && z2 != NULL && z_length(z1) == len1 && z_length(z2) == len2 && len != NULL
 // and z1 and z2 each contain a single ONE
 // effects: allocates memory (caller must free), updates *len
 static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len2, int *len) {
-	if (!len) {
-		return NULL;
-	} else if (len2 < len1) {
+	if (len2 < len1) {
 		return easy_mul(z2, z1, len2, len1, len);
 	}
 
@@ -51,10 +49,6 @@ static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len
 }
 
 zrep z_mul(const zrep z1, const zrep z2) {
-	if (!z1 || !z2) {
-		return NULL;
-	}
-
 	// split z1 and z2 into sums of Fibonacci numbers, then multiply everything out
 	int len1 = z_length(z1);
 	int len2 = z_length(z2);

@@ -40,23 +40,23 @@ int main(int argc, char **argv) {
 
 	if (argc == 2) {
 		zint n = strtozi(argv[1]);
-		if (zint_is_valid(n)) {
+		if (n) {
 			ans = z_rep(n);
 		} else {
 			return z_error(BOUND, argv[1]);
 		}
 	} else if (strcmp(command, "pow") == 0 && argc == 3) {
 		zint n = strtozi(argv[2]);
-		if (zint_is_valid(n)) {
+		if (n) {
 			printf("%d\n", z_pow(n));
 		} else {
 			return z_error(BOUND, argv[2]);
 		}
 	} else if (strcmp(command, "pal") == 0 && argc == 3) {
 		zint n = strtozi(argv[2]);
-		if (zint_is_valid(n) && z_pal(n)) {
+		if (n && z_pal(n)) {
 			puts("True");
-		} else if (zint_is_valid(n)) {
+		} else if (n) {
 			puts("False");
 		} else {
 			return z_error(BOUND, argv[2]);
