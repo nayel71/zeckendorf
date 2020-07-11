@@ -38,7 +38,7 @@ int z_length(const zrep z);
 
 // z_print(z) prints z to stdout 
 // requires: z is non-NULL
-// effects: may print to stdout
+// effects: prints output
 void z_print(const zrep z);
 
 // z_pow(n) returns the largest integer k such that z_rep(n) is a k-power
@@ -46,7 +46,7 @@ void z_print(const zrep z);
 // requires: n is non-zero
 int z_pow(const zint n);
 
-// z_pal(n) returns true if z_rep(n) is a palindrome, and false otherwise
+// z_pal(n) returns true if z_rep(n) is a palindrome, returns false otherwise
 // requires: n is non-zero 
 bool z_pal(const zint n);
 
