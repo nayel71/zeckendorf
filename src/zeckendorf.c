@@ -11,44 +11,25 @@ bool zint_is_valid(const zint n) {
 	return n > 0 && n <= LIMIT;
 }
 
-// iterates through z
-// if successful, returns true, updates *len with the length of z, and, if print, prints z to stdout
-// returns false if z is not a valid Zeckendorf representation
-static bool iterate(const zrep z, int *len, bool print) {
+bool zrep_is_valid(const zrep z) {
 	zrep it = z;
-	if (!len || !it || *it != ONE) {
+	if (!it || *it != ONE) {
 		return false;
 	}
-	for (*len = 0; *it; ++*len, ++it) {
+	for (; *it; ++it) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it + 1) - ZERO > 1) {
 			return false;
-		} else if (print) {
-			putchar(*it);
 		}
-	}
-	if (print) {
-		putchar('\n');
 	}
 	return true;
 }
 
-bool zrep_is_valid(const zrep z) {
-	int len;
-	return iterate(z, &len, false);
-}
-
 int z_length(const zrep z) {
-	int len;
-	if (iterate(z, &len, false)) {
-		return len;
-	} else {
-		return 0;
-	}
+	return strlen(z);
 }
 
 void z_print(const zrep z) {
-	int len;
-	iterate(z, &len, true);
+	puts(z);
 }
 
 zint strtozi(const char *str) {
