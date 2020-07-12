@@ -9,11 +9,10 @@ const zdigit ONE = '1';
 
 // checks if z is a valid Zeckendorf representation
 static bool zrep_is_valid(const zrep z) {
-	zrep it = z;
-	if (!it || *it != ONE) {
+	if (!z || *z != ONE) {
 		return false;
 	}
-	for (; *it; ++it) {
+	for (zrep it = z; *it; ++it) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it + 1) - ZERO > 1) {
 			return false;
 		}
