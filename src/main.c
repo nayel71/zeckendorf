@@ -70,10 +70,11 @@ int main(int argc, char **argv) {
 		} else if (!z2) {
 			free(z1);
 			return z_error(REP, argv[3]);
+		} else {
+			ans = z_add(z1, z2);
+			free(z1);
+			free(z2);
 		}
-		ans = z_add(z1, z2);
-		free(z1);
-		free(z2);
 		for (int i = 4; i < argc; i++) {
 			z1 = strtozr(argv[i]);
 			z2 = z_add(ans, z1);
@@ -98,10 +99,11 @@ int main(int argc, char **argv) {
 		} else if (!z2) {
 			free(z1);
 			return z_error(REP, argv[3]);
+		} else {
+			ans = z_mul(z1, z2);
+			free(z1);
+			free(z2);
 		}
-		ans = z_mul(z1, z2);
-		free(z1);
-		free(z2);
 		for (int i = 4; i < argc; i++) {
 			z1 = strtozr(argv[i]);
 			z2 = z_mul(ans, z1);
