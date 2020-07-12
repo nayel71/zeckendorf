@@ -76,12 +76,11 @@ int main(int argc, char **argv) {
 			free(z2);
 			for (int i = 4; i < argc; i++) {
 				z1 = strtozr(argv[i]);
-				z2 = z_add(ans, z1);
 				if (!z1) {
-					free(z2);
 					free(ans);
 					return z_error(REP, argv[i]);
 				} else {
+					z2 = z_add(ans, z1);
 					free(z1);
 					int len = z_length(z2);
 					ans = realloc(ans, (len + 1) * sizeof(zdigit));
@@ -105,12 +104,11 @@ int main(int argc, char **argv) {
 			free(z2);
 			for (int i = 4; i < argc; i++) {
 				z1 = strtozr(argv[i]);
-				z2 = z_mul(ans, z1);
 				if (!z1) {
-					free(z2);
 					free(ans);
 					return z_error(REP, argv[i]);
 				} else {
+					z2 = z_mul(ans, z1);
 					free(z1);
 					int len = z_length(z2);
 					ans = realloc(ans, (len + 1) * sizeof(zdigit));
