@@ -12,7 +12,7 @@ static bool zrep_is_valid(const zrep z) {
 	if (!z || *z != ONE) {
 		return false;
 	}
-	for (zrep it = z; *it; ++it) {
+	for (zrep it = z + 1; *it; ++it) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it + 1) - ZERO > 1) {
 			return false;
 		}
