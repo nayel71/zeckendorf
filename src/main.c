@@ -64,58 +64,58 @@ int main(int argc, char **argv) {
 	} else if (strcmp(command, "add") == 0 && argc > 3) {
 		zrep z1 = strtozr(argv[2]);
 		zrep z2 = strtozr(argv[3]);
-		ans = z_add(z1, z2);
-		if (ans) {
-			free(z1);
-			free(z2);
-			for (int i = 4; i < argc; i++) {
-				z1 = strtozr(argv[i]);
-				z2 = z_add(ans, z1);
-				if (z2) {
-					free(z1);
-					int len = z_length(z2);
-					ans = realloc(ans, (len + 1) * sizeof(zdigit));
-					memcpy(ans, z2, (len + 1) * sizeof(zdigit));
-					free(z2);
-				} else {
-					free(ans);
-					return z_error(REP, argv[i]);
-				}
-			}
-		} else if (!z1) {
+		if (!z1) {
 			free(z2);
 			return z_error(REP, argv[2]);
-		} else {
+		} else if (!z2) {
 			free(z1);
 			return z_error(REP, argv[3]);
+		}
+		ans = z_add(z1, z2);
+		free(z1);
+		free(z2);
+		for (int i = 4; i < argc; i++) {
+			z1 = strtozr(argv[i]);
+			z2 = z_add(ans, z1);
+			if (!z1) {
+				free(z2);
+				free(ans);
+				return z_error(REP, argv[i]);
+			} else {
+				free(z1);
+				int len = z_length(z2);
+				ans = realloc(ans, (len + 1) * sizeof(zdigit));
+				memcpy(ans, z2, (len + 1) * sizeof(zdigit));
+				free(z2);
+			}
 		}
 	} else if (strcmp(command, "mul") == 0 && argc > 3) {
 		zrep z1 = strtozr(argv[2]);
 		zrep z2 = strtozr(argv[3]);
-		ans = z_mul(z1, z2);
-		if (ans) {
-			free(z1);
-			free(z2);
-			for (int i = 4; i < argc; i++) {
-				z1 = strtozr(argv[i]);
-				z2 = z_mul(ans, z1);
-				if (z2) {
-					free(z1);
-					int len = z_length(z2);
-					ans = realloc(ans, (len + 1) * sizeof(zdigit));
-					memcpy(ans, z2, (len + 1) * sizeof(zdigit));
-					free(z2);
-				} else {
-					free(ans);
-					return z_error(REP, argv[i]);
-				}
-			}
-		} else if (!z1) {
+		if (!z1) {
 			free(z2);
 			return z_error(REP, argv[2]);
-		} else {
+		} else if (!z2) {
 			free(z1);
 			return z_error(REP, argv[3]);
+		}
+		ans = z_mul(z1, z2);
+		free(z1);
+		free(z2);
+		for (int i = 4; i < argc; i++) {
+			z1 = strtozr(argv[i]);
+			z2 = z_mul(ans, z1);
+			if (!z1) {
+				free(z2);
+				free(ans);
+				return z_error(REP, argv[i]);
+			} else {
+				free(z1);
+				int len = z_length(z2);
+				ans = realloc(ans, (len + 1) * sizeof(zdigit));
+				memcpy(ans, z2, (len + 1) * sizeof(zdigit));
+				free(z2);
+			}
 		}
 	} else {
 		return help(argv[0]);
