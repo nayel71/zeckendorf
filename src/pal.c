@@ -1,5 +1,4 @@
 #include "../include/zeckendorf.h"
-#include <stdlib.h>
 
 bool z_pal(const zint n) {
 	zrep rep = z_rep(n);

@@ -1,5 +1,4 @@
 #include "../include/zeckendorf.h"
-#include <stdlib.h>
 
 int z_pow(const zint n) {
 	zrep rep = z_rep(n);
