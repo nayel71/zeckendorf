@@ -42,6 +42,7 @@ void z_print(const zrep z);
 void z_copy(const zrep z1, zrep *z2);
 
 // z_clear(z) frees the memory at z
+// requires: z is non-NULL
 void z_clear(zrep *z);
 
 // z_pow(n) returns the largest integer k such that z_rep(n) is a k-power
