@@ -46,3 +46,13 @@ zrep strtozr(const char *str) {
 		return NULL;
 	}
 }
+
+void z_copy(const zrep z1, zrep *z2) {
+	int len = z_length(z1);
+	*z2 = realloc(*z2, (len + 1) * sizeof(zdigit));
+	memcpy(*z2, z1, (len + 1) * sizeof(zdigit));
+}
+
+void z_clear(zrep *z) {
+	free(*z);
+}

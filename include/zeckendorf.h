@@ -4,16 +4,11 @@
 #include "types.h"
 #include <stdbool.h>
 
-// constants:
-extern const zint LIMIT;
-extern const zdigit ZERO;
-extern const zdigit ONE;
-
 // definitions:
 // - a zint is either zero or a non-zero return value of strtozi
 // - a zrep is either NULL or a non-NULL return value of strtozr
 
-// informally,
+// informally, (see types.h)
 // - a zint is a non-negative integer <= LIMIT
 // - a zrep is a binary string consisting of ZEROs and ONEs,
 //   that starts with ONE and does not contain consecutive ONEs
@@ -24,12 +19,12 @@ zint strtozi(const char *str);
 
 // strtozr(str) tries to convert str to a non-NULL zrep
 // returns the converted value if successful, returns NULL otherwise
-// effects: allocates memory (caller must free)
+// effects: allocates memory (caller must z_clear the return address)
 zrep strtozr(const char *str);
 
 // z_rep(n) returns the Zeckendorf representation of n
 // requires: n is non-zero
-// effects: allocates memory (caller must free)
+// effects: allocates memory (caller must z_clear the return address)
 zrep z_rep(const zint n);
 
 // z_length(z) returns the length of z
@@ -40,6 +35,14 @@ int z_length(const zrep z);
 // requires: z is non-NULL
 // effects: prints output
 void z_print(const zrep z);
+
+// z_copy(z1, z2) copies z1 to z2
+// requires: z1 and z2 are non-NULL
+// effects: allocates memory (caller must z_clear(z2))
+void z_copy(const zrep z1, zrep *z2);
+
+// z_clear(z) frees the memory at z
+void z_clear(zrep *z);
 
 // z_pow(n) returns the largest integer k such that z_rep(n) is a k-power
 // i.e. of the form xx...xx (k repeated blocks) for some string x

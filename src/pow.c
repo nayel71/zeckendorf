@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int z_pow(const zint n) {
-	zrep const rep = z_rep(n);
+	zrep rep = z_rep(n);
 	int len = z_length(rep);
 	int pow = 1;
 	for (int k = 2; k <= len / 2; k++) { // k is the number of blocks
@@ -20,6 +20,6 @@ int z_pow(const zint n) {
 			}
 		}
 	}
-	free(rep);
+	z_clear(&rep);
 	return pow;
 }

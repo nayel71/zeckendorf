@@ -1,23 +1,8 @@
 #include "../include/arithmetic.h"
+#include "../include/error.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef enum {BOUND, REP} zerror_t;
-
-// returns an error message based on the error type
-static const char *message(zerror_t err) {
-	switch (err) {
-		case BOUND: return "out-of-range argument";
-		case REP:   return "invalid Zeckendorf representation";
-	}
-}
-
-// prints an error message to stderr and returns EXIT_FAILURE
-static int z_error(zerror_t err, const char *param) {
-	fprintf(stderr, "Zeckendorf Error: %s %s\n", message(err), param);
-	return EXIT_FAILURE;
-}
 
 // prints a list of commands to stderr and returns EXIT_FAILURE
 static int help(const char *progname) {
@@ -65,27 +50,25 @@ int main(int argc, char **argv) {
 		zrep z1 = strtozr(argv[2]);
 		zrep z2 = strtozr(argv[3]);
 		if (!z1) {
-			free(z2);
+			z_clear(&z2);
 			return z_error(REP, argv[2]);
 		} else if (!z2) {
-			free(z1);
+			z_clear(&z1);
 			return z_error(REP, argv[3]);
 		} else {
 			ans = z_add(z1, z2);
-			free(z1);
-			free(z2);
+			z_clear(&z1);
+			z_clear(&z2);
 			for (int i = 4; i < argc; i++) {
 				z1 = strtozr(argv[i]);
 				if (!z1) {
-					free(ans);
+					z_clear(&ans);
 					return z_error(REP, argv[i]);
 				} else {
 					z2 = z_add(ans, z1);
-					free(z1);
-					int len = z_length(z2);
-					ans = realloc(ans, (len + 1) * sizeof(zdigit));
-					memcpy(ans, z2, (len + 1) * sizeof(zdigit));
-					free(z2);
+					z_clear(&z1);
+					z_copy(z2, &ans);
+					z_clear(&z2);
 				}
 			}
 		}
@@ -93,27 +76,25 @@ int main(int argc, char **argv) {
 		zrep z1 = strtozr(argv[2]);
 		zrep z2 = strtozr(argv[3]);
 		if (!z1) {
-			free(z2);
+			z_clear(&z2);
 			return z_error(REP, argv[2]);
 		} else if (!z2) {
-			free(z1);
+			z_clear(&z1);
 			return z_error(REP, argv[3]);
 		} else {
 			ans = z_mul(z1, z2);
-			free(z1);
-			free(z2);
+			z_clear(&z1);
+			z_clear(&z2);
 			for (int i = 4; i < argc; i++) {
 				z1 = strtozr(argv[i]);
 				if (!z1) {
-					free(ans);
+					z_clear(&ans);
 					return z_error(REP, argv[i]);
 				} else {
 					z2 = z_mul(ans, z1);
-					free(z1);
-					int len = z_length(z2);
-					ans = realloc(ans, (len + 1) * sizeof(zdigit));
-					memcpy(ans, z2, (len + 1) * sizeof(zdigit));
-					free(z2);
+					z_clear(&z1);
+					z_copy(z2, &ans);
+					z_clear(&z2);
 				}
 			}
 		}
@@ -123,6 +104,6 @@ int main(int argc, char **argv) {
 	
 	if (ans) {
 		z_print(ans);
-		free(ans);
+		z_clear(&ans);
 	}
 }

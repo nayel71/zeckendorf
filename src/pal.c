@@ -2,14 +2,14 @@
 #include <stdlib.h>
 
 bool z_pal(const zint n) {
-	zrep const rep = z_rep(n);
+	zrep rep = z_rep(n);
 	int len = z_length(rep);
 	for (int i = 0; i < len / 2; i++) {
 		if (rep[i] != rep[len - i - 1]) {
-			free(rep);
+			z_clear(&rep);
 			return false;
 		}
 	}
-	free(rep);
+	z_clear(&rep);
 	return true;
 }
