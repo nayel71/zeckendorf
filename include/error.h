@@ -1,7 +1,7 @@
 #ifndef ERROR_H
 #define ERROR_H
 
-typedef enum {BOUND, REP} zerror_t;
+typedef enum {ARG, REP} zerror_t;
 
 // z_error(err, param) prints an error message regarding param based on
 // the type of err to stderr and returns EXIT_FAILURE

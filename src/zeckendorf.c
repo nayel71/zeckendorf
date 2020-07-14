@@ -8,8 +8,9 @@ const char ZERO = '0';
 const char ONE = '1';
 
 zint strtozi(const char *str) {
-	zint n = strtoll(str, NULL, 0);
-	if (n > 0 && n <= LIMIT) {
+	char *endptr;
+	zint n = strtoll(str, &endptr, 0);
+	if (n > 0 && n <= LIMIT && !*endptr) {
 		return n;
 	} else {
 		return 0;

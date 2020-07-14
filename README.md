@@ -96,7 +96,7 @@ Usage:
 $ ./zeckendorf 10
 10010
 $ ./zeckendorf 11111111111111111111111
-Zeckendorf Error: out-of-range argument 11111111111111111111111
+Zeckendorf Error: invalid argument 11111111111111111111111
 $ ./zeckendorf add 10010 10100 10110
 Zeckendorf Error: invalid Zeckendorf representation 10110
 $ ./zeckendorf mul 10010 10100 10101
