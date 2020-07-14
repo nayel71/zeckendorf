@@ -91,5 +91,5 @@ zrep z_rep(const zint n) {
 
 	zrep zans = strtozr(ans);
 	free(ans);
-	return ans;
+	return zans;
 }
