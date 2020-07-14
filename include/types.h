@@ -2,7 +2,6 @@
 #define TYPES_H
 
 typedef long long zint;
-typedef char zdigit;
-typedef zdigit *zrep;
+typedef char *zrep;
 
 #endif /* TYPES_H */

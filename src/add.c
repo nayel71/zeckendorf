@@ -6,37 +6,38 @@
 
 // cf. paper by Frougny et al.
 
-// add_same_len(z1, z2, len, rlen) returns the sum of z1 and z2 and stores its length at rlen if rlen != NULL
-// requires: z1 and z2 are Zeckendorf representations with possible leading ZEROs, having equal length len
+// add_same_len(s1, s2, len, rlen) returns the sum of the Zeckendorf representations given by s1 and s2
+// and stores its length at rlen if rlen != NULL
+// requires: strlen(s1) == strlen(s2) == len, s1 and s2 contain possible leading ZEROs
 // effects: allocates memory (caller must free), updates *rlen if rlen != NULL
-static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *rlen) {
-	const zdigit TWO = ONE + 1;
-	const zdigit THREE = TWO + 1;
+static zrep add_same_len(const char *s1, const char *s2, const int len, int *rlen) {
+	const char TWO = ONE + 1;
+	const char THREE = TWO + 1;
 
-	if (z1[0] == ONE && z2[0] == ONE) {
-		zrep cp1 = malloc((len + 2) * sizeof(zdigit));
-		cp1[0] = ZERO;
-		memcpy(cp1 + 1, z1, (len + 1) * sizeof(zdigit));
+	if (s1[0] == ONE && s2[0] == ONE) {
+		char *cpy1 = malloc((len + 2) * sizeof(char));
+		cpy1[0] = ZERO;
+		memcpy(cpy1 + 1, s1, (len + 1) * sizeof(char));
 
-		zrep cp2 = malloc((len + 2) * sizeof(zdigit));
-		cp2[0] = ZERO;
-		memcpy(cp2 + 1, z2, (len + 1) * sizeof(zdigit));
+		char *cpy2 = malloc((len + 2) * sizeof(char));
+		cpy2[0] = ZERO;
+		memcpy(cpy2 + 1, s2, (len + 1) * sizeof(char));
 
-		zrep ans = add_same_len(cp1, cp2, len + 1, rlen);
-		free(cp1);
-		free(cp2);
+		zrep ans = add_same_len(cpy1, cpy2, len + 1, rlen);
+		free(cpy1);
+		free(cpy2);
 		return ans;
 	}
 	
-	zrep ans = malloc((len + 2) * sizeof(zdigit)); 
+	char *ans = malloc((len + 2) * sizeof(char)); 
 	ans[0] = ZERO; 
 	ans[len + 1] = '\0';
 	
 	// add pointwise
 	for (int i = 1; i <= len; i++) {
-		if (z1[i - 1] != z2[i - 1]) {
+		if (s1[i - 1] != s2[i - 1]) {
 			ans[i] = ONE;
-		} else if (z1[i - 1] == z2[i - 1] && z1[i - 1] == ONE) {
+		} else if (s1[i - 1] == s2[i - 1] && s1[i - 1] == ONE) {
 			ans[i] = TWO;
 		} else {
 			ans[i] = ZERO;
@@ -111,21 +112,31 @@ static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *rlen)
 	}
 
 	// remove leading ZEROs
-	zdigit *pos = memchr(ans, ONE, (len + 1) * sizeof(zdigit));
-	memmove(ans, pos, (len + 2 + ans - pos) * sizeof(zdigit));
+	char *pos = memchr(ans, ONE, (len + 1) * sizeof(char));
+	memmove(ans, pos, (len + 2 + ans - pos) * sizeof(char));
 	if (rlen) {
 		*rlen = len + 1 + ans - pos;
 	}
-	return ans;
+
+	zrep zans = strtozr(ans);
+	free(ans);
+	return zans;
 }
 
 zrep add_len(const zrep z1, const zrep z2, const int len1, const int len2, int *rlen) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
-		zrep cp = malloc((len1 + 1) * sizeof(zdigit));
-		memset(cp, ZERO, (len1 - len2) * sizeof(zdigit));
-		memcpy(cp + len1 - len2, z2, (len2 + 1) * sizeof(zdigit));
-		zrep ans = add_same_len(z1, cp, len1, rlen);
+		char *s1 = zrtostr(z1);
+		char *s2 = zrtostr(z2);
+
+		char *cp = malloc((len1 + 1) * sizeof(char));
+		memset(cp, ZERO, (len1 - len2) * sizeof(char));
+		memcpy(cp + len1 - len2, s2, (len2 + 1) * sizeof(char));
+
+		zrep ans = add_same_len(s1, cp, len1, rlen);
+
+		free(s1);
+		free(s2);
 		free(cp);
 		return ans;
 	} else if (len1 < len2) {

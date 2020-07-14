@@ -6,16 +6,16 @@
 
 // constants:
 extern const zint LIMIT;
-extern const zdigit ZERO;
-extern const zdigit ONE;
+extern const char ZERO;
+extern const char ONE;
 
 // definitions:
 // - a zint is either zero or a non-zero return value of strtozi
 // - a zrep is either NULL or a non-NULL return value of strtozr
 
 // informally,
-// - a zint is a non-negative integer <= LIMIT
-// - a zrep is a binary string consisting of ZEROs and ONEs,
+// - a zint represents a non-negative integer <= LIMIT
+// - a zrep represents a binary string consisting of ZEROs and ONEs,
 //   that starts with ONE and does not contain consecutive ONEs
 
 // strtozi(str) tries to convert str to a non-zero zint

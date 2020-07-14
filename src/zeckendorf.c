@@ -4,8 +4,8 @@
 #include <string.h>
 
 const zint LIMIT = 9217463444206948444;
-const zdigit ZERO = '0';
-const zdigit ONE = '1';
+const char ZERO = '0';
+const char ONE = '1';
 
 zint strtozi(const char *str) {
 	zint n = strtoll(str, NULL, 0);
@@ -16,12 +16,12 @@ zint strtozi(const char *str) {
 	}
 }
 
-// checks if z is a valid Zeckendorf representation
-static bool zrep_is_valid(const zrep z) {
-	if (!z || *z != ONE) {
+// checks if s representss a valid Zeckendorf representation
+static bool rep_is_valid(const char *s) {
+	if (!s || *s != ONE) {
 		return false;
 	}
-	for (zrep it = z + 1; *it; ++it) {
+	for (const char *it = s + 1; *it; ++it) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it - 1) - ZERO > 1) {
 			return false;
 		}
@@ -29,12 +29,11 @@ static bool zrep_is_valid(const zrep z) {
 	return true;
 }
 
-zrep strtozr(const char *str) {
-	zrep z = strdup(str);
-	if (zrep_is_valid(z)) {
+zrep strtozr(const char *s) {
+	if (rep_is_valid(s)) {
+		zrep z = strdup(s);
 		return z;
 	} else {
-		free(z);
 		return NULL;
 	}
 }
@@ -50,8 +49,8 @@ int z_length(const zrep z) {
 
 void z_copy(const zrep z1, zrep *z2) {
 	int len = z_length(z1);
-	*z2 = realloc(*z2, (len + 1) * sizeof(zdigit));
-	memcpy(*z2, z1, (len + 1) * sizeof(zdigit));
+	*z2 = realloc(*z2, (len + 1) * sizeof(char));
+	memcpy(*z2, z1, (len + 1) * sizeof(char));
 }
 
 void z_clear(zrep *z) {
@@ -75,10 +74,11 @@ zrep z_rep(const zint n) {
 	zint fib;
 	maxfib(n, &index, &fib);
 
-	zrep ans = malloc(index * sizeof(zdigit));
+	char *ans = malloc(index * sizeof(char));
 
 	int i = 0;
 	zint rem = n;
+
 	for (int next_index; rem > 0; maxfib(rem, &index, &fib)) {
 		rem -= fib;
 		maxfib(rem, &next_index, &fib);
@@ -89,6 +89,10 @@ zrep z_rep(const zint n) {
 		}
 		
 	} 
+
 	ans[i] = '\0'; // at this point, i == original index - 1 
-	return ans;
+
+	zrep zans = strtozr(ans);
+	free(ans);
+	return zans;
 }
