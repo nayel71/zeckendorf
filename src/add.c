@@ -1,5 +1,6 @@
-#include "add.h"
+#include "../include/zeckendorf.h"
 #include "../include/arithmetic.h"
+#include "add.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -118,19 +119,19 @@ static zrep add_same_len(const zrep z1, const zrep z2, const int len, int *rlen)
 	return ans;
 }
 
-zrep add_len(const zrep z1, const zrep z2, const int len1, const int len2, int *len) {
+zrep add_len(const zrep z1, const zrep z2, const int len1, const int len2, int *rlen) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
 		zrep cp = malloc((len1 + 1) * sizeof(zdigit));
 		memset(cp, ZERO, (len1 - len2) * sizeof(zdigit));
 		memcpy(cp + len1 - len2, z2, (len2 + 1) * sizeof(zdigit));
-		zrep ans = add_same_len(z1, cp, len1, len);
+		zrep ans = add_same_len(z1, cp, len1, rlen);
 		free(cp);
 		return ans;
 	} else if (len1 < len2) {
-		return add_len(z2, z1, len2, len1, len);
+		return add_len(z2, z1, len2, len1, rlen);
 	} else {
-		return add_same_len(z1, z2, len1, len);
+		return add_same_len(z1, z2, len1, rlen);
 	}
 }
 

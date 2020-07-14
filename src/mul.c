@@ -1,19 +1,20 @@
+#include "../include/zeckendorf.h"
 #include "../include/arithmetic.h"
 #include "add.h"
 #include <stdlib.h>
 #include <string.h>
 
-// easy_mul(z1, z2, len1, len2, len) returns the product of z1 and z2 and stores its length at len
-// requires: z_length(z1) == len1 && z_length(z2) == len2 && len != NULL, z1 and z2 each contain a single ONE
-// effects: allocates memory (caller must free), updates *len
-static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len2, int *len) {
+// easy_mul(z1, z2, len1, len2, rlen) returns the product of z1 and z2 and stores its length at rlen
+// requires: z_length(z1) == len1 && z_length(z2) == len2 && rlen != NULL, z1 and z2 each contain a single ONE
+// effects: allocates memory (caller must free), updates *rlen
+static zrep easy_mul(const zrep z1, const zrep z2, const int len1, const int len2, int *rlen) {
 	if (len2 < len1) {
-		return easy_mul(z2, z1, len2, len1, len);
+		return easy_mul(z2, z1, len2, len1, rlen);
 	}
 
-	*len = len1 + len2 - 1;
-	zrep ans = malloc((*len + 1) * sizeof(zdigit));
-	ans[*len] = '\0';
+	*rlen = len1 + len2 - 1;
+	zrep ans = malloc((*rlen + 1) * sizeof(zdigit));
+	ans[*rlen] = '\0';
 
 	const int ind1 = len1 + 1;
 	const int ind2 = len2 + 1;
