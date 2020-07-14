@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 		if (n) {
 			ans = z_rep(n);
 		} else {
-			return z_error(BOUND, argv[1]);
+			return z_error(ARG, argv[1]);
 		}
 	} else if (strcmp(command, "add") == 0 && argc > 3) {
 		zrep z1 = strtozr(argv[2]);
