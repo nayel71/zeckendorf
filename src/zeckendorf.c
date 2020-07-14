@@ -72,12 +72,11 @@ zrep z_rep(const zint n) {
 	zint fib;
 	maxfib(n, &index, &fib);
 
-	zrep ans = malloc(index * sizeof(char));
-
+	char *ans = malloc(index * sizeof(char));
 	int i = 0;
-	zint rem = n;
+	int next_index;
 
-	for (int next_index; rem > 0; maxfib(rem, &index, &fib)) {
+	for (zint rem = n; rem > 0; maxfib(rem, &index, &fib)) {
 		rem -= fib;
 		maxfib(rem, &next_index, &fib);
 		ans[i] = ONE;
@@ -90,5 +89,7 @@ zrep z_rep(const zint n) {
 
 	ans[i] = '\0'; // at this point, i == original index - 1 
 
+	zrep zans = strtozr(ans);
+	free(ans);
 	return ans;
 }

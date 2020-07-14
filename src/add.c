@@ -6,11 +6,11 @@
 
 // cf. paper by Frougny et al.
 
-// add_same_len(s1, s2, len, rlen) returns the sum of the Zeckendorf representations given by s1 and s2
-// and stores its length at rlen if rlen != NULL
+// add_same_len(s1, s2, len, rlen) returns the string representation of the sum of the 
+// Zeckendorf representations given by s1 and s2, and stores its length at rlen if rlen != NULL
 // requires: strlen(s1) == strlen(s2) == len, s1 and s2 contain possible leading ZEROs
 // effects: allocates memory (caller must free), updates *rlen if rlen != NULL
-static zrep add_same_len(const char *s1, const char *s2, const int len, int *rlen) {
+static char *add_same_len(const char *s1, const char *s2, const int len, int *rlen) {
 	const char TWO = ONE + 1;
 	const char THREE = TWO + 1;
 
@@ -114,38 +114,39 @@ static zrep add_same_len(const char *s1, const char *s2, const int len, int *rle
 	// remove leading ZEROs
 	char *pos = memchr(ans, ONE, (len + 1) * sizeof(char));
 	memmove(ans, pos, (len + 2 + ans - pos) * sizeof(char));
+
 	if (rlen) {
 		*rlen = len + 1 + ans - pos;
 	}
 
-	zrep zans = strtozr(ans);
-	free(ans);
-	return zans;
+	return ans;
 }
 
-zrep add_len(const zrep z1, const zrep z2, const int len1, const int len2, int *rlen) {
+char *add_len(const char *s1, const char *s2, const int len1, const int len2, int *rlen) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
-		char *s1 = zrtostr(z1);
-		char *s2 = zrtostr(z2);
-
 		char *cp = malloc((len1 + 1) * sizeof(char));
 		memset(cp, ZERO, (len1 - len2) * sizeof(char));
 		memcpy(cp + len1 - len2, s2, (len2 + 1) * sizeof(char));
-
-		zrep ans = add_same_len(s1, cp, len1, rlen);
-
-		free(s1);
-		free(s2);
+		char *ans = add_same_len(s1, cp, len1, rlen);
 		free(cp);
 		return ans;
 	} else if (len1 < len2) {
-		return add_len(z2, z1, len2, len1, rlen);
+		return add_len(s2, s1, len2, len1, rlen);
 	} else {
-		return add_same_len(z1, z2, len1, rlen);
+		return add_same_len(s1, s2, len1, rlen);
 	}
 }
 
 zrep z_add(const zrep z1, const zrep z2) {
-	return add_len(z1, z2, z_length(z1), z_length(z2), NULL);
+	char *s1 = zrtostr(z1);
+	char *s2 = zrtostr(z2);
+
+	char *ans = add_len(s1, s2, strlen(s1), strlen(s2), NULL);
+	free(s1);
+	free(s2);
+
+	zrep zans = strtozr(ans);
+	free(ans);
+	return zans;
 }
