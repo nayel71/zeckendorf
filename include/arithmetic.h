@@ -1,7 +1,6 @@
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
-#include <stdbool.h>
 #include "types.h"
 
 // z_add(z1, z2) returns the sum of z1 and z2
