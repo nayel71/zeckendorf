@@ -73,8 +73,8 @@ zrep z_mul(const zrep z1, const zrep z2) {
 
 	char **fibs1 = malloc(n1 * sizeof(char *));
 	char **fibs2 = malloc(n2 * sizeof(char *));
-	int  *lens1 = malloc(n1 * sizeof(int));
-	int  *lens2 = malloc(n2 * sizeof(int));
+	int *lens1 = malloc(n1 * sizeof(int));
+	int *lens2 = malloc(n2 * sizeof(int));
 
 	for (int i = 0, m1 = 0; i < len1; i++) {
 		if (s1[i] == ONE) {
