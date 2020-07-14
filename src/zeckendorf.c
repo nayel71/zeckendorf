@@ -44,6 +44,20 @@ char *zrtostr(const zrep z) {
 	return s;
 }
 
+int z_length(const zrep z) {
+	return strlen(z);
+}
+
+void z_copy(const zrep z1, zrep *z2) {
+	int len = z_length(z1);
+	*z2 = realloc(*z2, (len + 1) * sizeof(zdigit));
+	memcpy(*z2, z1, (len + 1) * sizeof(zdigit));
+}
+
+void z_clear(zrep *z) {
+	free(*z);
+}
+
 // maxfib(n, index, fib) computes the largest Fibonacci number <= n,
 // stores it at fib and stores its index at index
 static void maxfib(const zint n, int *index, zint *fib) {
@@ -77,22 +91,4 @@ zrep z_rep(const zint n) {
 	} 
 	ans[i] = '\0'; // at this point, i == original index - 1 
 	return ans;
-}
-
-int z_length(const zrep z) {
-	return strlen(z);
-}
-
-void z_print(const zrep z) {
-	puts(z);
-}
-
-void z_copy(const zrep z1, zrep *z2) {
-	int len = z_length(z1);
-	*z2 = realloc(*z2, (len + 1) * sizeof(zdigit));
-	memcpy(*z2, z1, (len + 1) * sizeof(zdigit));
-}
-
-void z_clear(zrep *z) {
-	free(*z);
 }

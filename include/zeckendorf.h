@@ -32,11 +32,6 @@ zrep strtozr(const char *str);
 // effects: allocates memory (caller must free)
 char *zrtostr(const zrep z);
 
-// z_rep(n) returns the Zeckendorf representation of n
-// requires: n is non-zero
-// effects: allocates memory (caller must z_clear the return address)
-zrep z_rep(const zint n);
-
 // z_length(z) returns the length of z
 // requires: z is non-NULL
 int z_length(const zrep z);
@@ -49,5 +44,10 @@ void z_copy(const zrep z1, zrep *z2);
 // z_clear(z) frees the memory at z
 // requires: *z is non-NULL
 void z_clear(zrep *z);
+
+// z_rep(n) returns the Zeckendorf representation of n
+// requires: n is non-zero
+// effects: allocates memory (caller must z_clear the return address)
+zrep z_rep(const zint n);
 
 #endif /* ZECKENDORF_H */
