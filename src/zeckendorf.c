@@ -16,7 +16,7 @@ zint strtozi(const char *str) {
 	}
 }
 
-// checks if s representss a valid Zeckendorf representation
+// checks if s represents a valid Zeckendorf representation
 static bool rep_is_valid(const char *s) {
 	if (!s || *s != ONE) {
 		return false;
@@ -31,16 +31,14 @@ static bool rep_is_valid(const char *s) {
 
 zrep strtozr(const char *s) {
 	if (rep_is_valid(s)) {
-		zrep z = strdup(s);
-		return z;
+		return strdup(s);
 	} else {
 		return NULL;
 	}
 }
 
 char *zrtostr(const zrep z) {
-	char *s = strdup(z);
-	return s;
+	return strdup(z);
 }
 
 int z_length(const zrep z) {
@@ -62,7 +60,7 @@ void z_clear(zrep *z) {
 static void maxfib(const zint n, int *index, zint *fib) {
 	zint fib1 = 0;
 	zint fib2 = 1;
-	for (*index = 1; fib1 + fib2 <= n; (*index)++) {
+	for (*index = 1; fib1 + fib2 <= n; ++*index) {
 		*fib = fib1 + fib2;
 		fib1 = fib2;
 		fib2 = *fib;
@@ -74,7 +72,7 @@ zrep z_rep(const zint n) {
 	zint fib;
 	maxfib(n, &index, &fib);
 
-	char *ans = malloc(index * sizeof(char));
+	zrep ans = malloc(index * sizeof(char));
 
 	int i = 0;
 	zint rem = n;
@@ -92,7 +90,5 @@ zrep z_rep(const zint n) {
 
 	ans[i] = '\0'; // at this point, i == original index - 1 
 
-	zrep zans = strtozr(ans);
-	free(ans);
-	return zans;
+	return ans;
 }

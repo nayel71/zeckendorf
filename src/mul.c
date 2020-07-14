@@ -53,19 +53,19 @@ zrep z_mul(const zrep z1, const zrep z2) {
 	// split z1 and z2 into sums of Fibonacci numbers, then multiply everything out
 	char *s1 = zrtostr(z1);
 	char *s2 = zrtostr(z2);
-	int len1 = strlen(s1);
-	int len2 = strlen(s2);
+	int len1 = 0;
+	int len2 = 0;
 
 	int n1 = 0; // number of ONEs in z1
 	int n2 = 0; // number of ONEs in z2
 
-	for (int i = 0; i < len1; i++) {
+	for (int i = 0; s1[i]; ++len1, ++i) {
 		if (s1[i] == ONE) {
 			n1++;
 		} 
 	}
 
-	for (int i = 0; i < len2; i++) {
+	for (int i = 0; s2[i]; ++len2, ++i) {
 		if (s2[i] == ONE) {
 			n2++;
 		} 
