@@ -74,16 +74,14 @@ zrep z_rep(const zint n) {
 
 	char *ans = malloc(index * sizeof(char));
 	int i = 0;
-	int next_index;
 
 	for (zint rem = n; rem > 0; maxfib(rem, &index, &fib)) {
 		rem -= fib;
+		int next_index;
 		maxfib(rem, &next_index, &fib);
 		ans[i] = ONE;
-		i++;
-		for (int j = index - 1; j > next_index; j--, i++) {
-			ans[i] = ZERO;
-		}
+		memset(ans + i + 1, ZERO, (index - next_index - 1) * sizeof(char));
+		i += index - next_index;
 		
 	} 
 
