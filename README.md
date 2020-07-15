@@ -41,7 +41,7 @@ int z_length(const zrep z);
 
 // z_copy(z1, z2) copies z1 to z2
 // requires: z1 and *z2 are non-NULL
-// effects: allocates memory (caller must z_clear(z2))
+// effects: reallocates memory to z2
 void z_copy(const zrep z1, zrep *z2);
 
 // z_clear(z) frees the memory at z
