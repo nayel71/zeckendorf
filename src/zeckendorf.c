@@ -34,8 +34,9 @@ static bool rep_is_valid(const char *s) {
 zrep *strtozr(const char *s) {
 	if (rep_is_valid(s)) {
 		zrep *ans = malloc(sizeof(zrep));
-		ans->val = strdup(s);
 		ans->len = strlen(s);
+		ans->val = malloc(ans->len * sizeof(char));
+		memcpy(ans->val, s, ans->len * sizeof(char));
 		return ans;
 	} else {
 		return NULL;
@@ -43,7 +44,10 @@ zrep *strtozr(const char *s) {
 }
 
 char *zrtostr(const zrep *z) {
-	return strdup(z->val);
+	char *s = malloc((z->len + 1) * sizeof(char));
+	memcpy(s, z->val, z->len * sizeof(char));
+	s[z->len] = '\0';
+	return s;
 }
 
 void z_clear(zrep *z) {
@@ -80,8 +84,6 @@ zrep *z_rep(const zint *n) {
 		pos += ind1 - ind2;
 		
 	} 
-
-	ans[pos] = '\0'; // at this point, pos == original index - 1 
 
 	zrep *zans = malloc(sizeof(zrep));
 	zans->val = ans;

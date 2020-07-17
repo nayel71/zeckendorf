@@ -15,23 +15,22 @@ static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rl
 	const char THREE = TWO + 1;
 
 	if (s1[0] == ONE && s2[0] == ONE) {
-		char *cpy1 = malloc((len + 2) * sizeof(char));
-		memcpy(cpy1 + 1, s1, (len + 1) * sizeof(char));
+		char *cpy1 = malloc((len + 1) * sizeof(char));
+		memcpy(cpy1 + 1, s1, len * sizeof(char));
 		cpy1[0] = ZERO;
 
-		char *cpy2 = malloc((len + 2) * sizeof(char));
-		memcpy(cpy2 + 1, s2, (len + 1) * sizeof(char));
+		char *cpy2 = malloc((len + 1) * sizeof(char));
+		memcpy(cpy2 + 1, s2, len * sizeof(char));
 		cpy2[0] = ZERO;
 
-		char *ans = add_same_len(cpy1, cpy2, len + 1, rlen);
+		char *ans = add_same_len(cpy1, cpy2, len, rlen);
 		free(cpy1);
 		free(cpy2);
 		return ans;
 	}
 	
-	char *ans = malloc((len + 2) * sizeof(char)); 
+	char *ans = malloc((len + 1) * sizeof(char)); 
 	ans[0] = ZERO; 
-	ans[len + 1] = '\0';
 	
 	// add pointwise
 	for (int i = 1; i <= len; i++) {
@@ -112,8 +111,8 @@ static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rl
 	}
 
 	// remove leading ZEROs
-	char *pos = memchr(ans, ONE, (len + 1) * sizeof(char));
-	memmove(ans, pos, (len + 2 + ans - pos) * sizeof(char));
+	char *pos = memchr(ans, ONE, len * sizeof(char));
+	memmove(ans, pos, (len + 1 + ans - pos) * sizeof(char));
 
 	if (rlen) {
 		*rlen = len + 1 + ans - pos;
@@ -125,9 +124,9 @@ static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rl
 char *add_len(const char *s1, const char *s2, size_t len1, size_t len2, size_t *rlen) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
-		char *cp = malloc((len1 + 1) * sizeof(char));
+		char *cp = malloc(len1 * sizeof(char));
 		memset(cp, ZERO, (len1 - len2) * sizeof(char));
-		memcpy(cp + len1 - len2, s2, (len2 + 1) * sizeof(char));
+		memcpy(cp + len1 - len2, s2, len2 * sizeof(char));
 		char *ans = add_same_len(s1, cp, len1, rlen);
 		free(cp);
 		return ans;

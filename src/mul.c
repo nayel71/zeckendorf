@@ -14,8 +14,7 @@ static char *easy_mul(const char *s1, const char *s2, size_t len1, size_t len2, 
 	}
 
 	*rlen = len1 + len2 - 1;
-	char *ans = malloc((*rlen + 1) * sizeof(char));
-	ans[*rlen] = '\0';
+	char *ans = malloc(*rlen * sizeof(char));
 
 	const int ind1 = len1 + 1;
 	const int ind2 = len2 + 1;
@@ -58,13 +57,13 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 	int num1 = 0; // number of ONEs in z1
 	int num2 = 0; // number of ONEs in z2
 
-	for (int i = 0; s1[i]; ++i) {
+	for (int i = 0; i < len1; ++i) {
 		if (s1[i] == ONE) {
 			num1++;
 		}
 	}
 
-	for (int i = 0; s2[i]; ++i) {
+	for (int i = 0; i < len2; ++i) {
 		if (s2[i] == ONE) {
 			num2++;
 		}
@@ -78,10 +77,9 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 	for (int i = 0, j = 0; i < len1; i++) {
 		if (s1[i] == ONE) {
 			lens1[j] = len1 - i;
-			fibs1[j] = malloc((lens1[j] + 1) * sizeof(char));
+			fibs1[j] = malloc(lens1[j] * sizeof(char));
 			fibs1[j][0] = ONE;
 			memset(fibs1[j] + 1, ZERO, (lens1[j] - 1) * sizeof(char));
-			fibs1[j][lens1[j]] = '\0';
 			j++;
 		}
 	}
@@ -89,10 +87,9 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 	for (int i = 0, j = 0; i < len2; i++) {
 		if (s2[i] == ONE) {
 			lens2[j] = len2 - i;
-			fibs2[j] = malloc((lens2[j] + 1) * sizeof(char));
+			fibs2[j] = malloc(lens2[j] * sizeof(char));
 			fibs2[j][0] = ONE;
 			memset(fibs2[j] + 1, ZERO, (lens2[j] - 1) * sizeof(char));
-			fibs2[j][lens2[j]] = '\0';
 			j++;
 		}
 	}

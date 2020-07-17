@@ -13,8 +13,8 @@ typedef struct zint {
 } zint;
 
 typedef struct zrep {
-	char *val;
-	size_t len;
+	char *val; // a char array, not a string
+	size_t len; // length of the char array
 } zrep;
 
 #endif /* TYPES_H */
