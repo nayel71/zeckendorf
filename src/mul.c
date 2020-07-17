@@ -8,7 +8,7 @@
 // Zeckendorf representations given by s1 and s2, and stores its length at rlen
 // requires: strlen(s1) == len1 && strlen(s2) == len2 && rlen != NULL, s1 and s2 each contain a single ONE
 // effects: allocates memory (caller must free), updates *rlen
-static char *easy_mul(const char *s1, const char *s2, const int len1, const int len2, int *rlen) {
+static char *easy_mul(const char *s1, const char *s2, size_t len1, size_t len2, size_t *rlen) {
 	if (len2 < len1) {
 		return easy_mul(s2, s1, len2, len1, rlen);
 	}
@@ -49,84 +49,78 @@ static char *easy_mul(const char *s1, const char *s2, const int len1, const int 
 	return ans;
 }
 
-zrep z_mul(const zrep z1, const zrep z2) {
+zrep *z_mul(const zrep *z1, const zrep *z2) {
 	// split z1 and z2 into sums of Fibonacci numbers, then multiply everything out
-	char *s1 = zrtostr(z1);
-	char *s2 = zrtostr(z2);
-	int len1 = 0;
-	int len2 = 0;
+	char *s1 = z1->val;
+	char *s2 = z2->val;
+	int len1 = z1->len;
+	int len2 = z2->len;
+	int num1 = 0; // number of ONEs in z1
+	int num2 = 0; // number of ONEs in z2
 
-	int n1 = 0; // number of ONEs in z1
-	int n2 = 0; // number of ONEs in z2
-
-	for (int i = 0; s1[i]; ++len1, ++i) {
+	for (int i = 0; s1[i]; ++i) {
 		if (s1[i] == ONE) {
-			n1++;
-		} 
-	}
-
-	for (int i = 0; s2[i]; ++len2, ++i) {
-		if (s2[i] == ONE) {
-			n2++;
-		} 
-	}
-
-	char **fibs1 = malloc(n1 * sizeof(char *));
-	char **fibs2 = malloc(n2 * sizeof(char *));
-	int *lens1 = malloc(n1 * sizeof(int));
-	int *lens2 = malloc(n2 * sizeof(int));
-
-	for (int i = 0, m1 = 0; i < len1; i++) {
-		if (s1[i] == ONE) {
-			lens1[m1] = len1 - i;
-			fibs1[m1] = malloc((lens1[m1] + 1) * sizeof(char));
-			fibs1[m1][0] = ONE;
-			memset(fibs1[m1] + 1, ZERO, (lens1[m1] - 1) * sizeof(char));
-			fibs1[m1][lens1[m1]] = '\0';
-			m1++;
+			num1++;
 		}
 	}
 
-	for (int i = 0, m2 = 0; i < len2; i++) {
+	for (int i = 0; s2[i]; ++i) {
 		if (s2[i] == ONE) {
-			lens2[m2] = len2 - i;
-			fibs2[m2] = malloc((lens2[m2] + 1) * sizeof(char));
-			fibs2[m2][0] = ONE;
-			memset(fibs2[m2] + 1, ZERO, (lens2[m2] - 1) * sizeof(char));
-			fibs2[m2][lens2[m2]] = '\0';
-			m2++;
+			num2++;
 		}
 	}
 
-	char *sum;
-	int sum_len;
-	for (int k = n2 - 1; k >= 0; k--) {
-		for (int j = n1 - 1; j >= 0; j--) {
-			int summand_len;
+	char **fibs1 = malloc(num1 * sizeof(char *));
+	char **fibs2 = malloc(num2 * sizeof(char *));
+	int *lens1 = malloc(num1 * sizeof(int));
+	int *lens2 = malloc(num2 * sizeof(int));
+
+	for (int i = 0, j = 0; i < len1; i++) {
+		if (s1[i] == ONE) {
+			lens1[j] = len1 - i;
+			fibs1[j] = malloc((lens1[j] + 1) * sizeof(char));
+			fibs1[j][0] = ONE;
+			memset(fibs1[j] + 1, ZERO, (lens1[j] - 1) * sizeof(char));
+			fibs1[j][lens1[j]] = '\0';
+			j++;
+		}
+	}
+
+	for (int i = 0, j = 0; i < len2; i++) {
+		if (s2[i] == ONE) {
+			lens2[j] = len2 - i;
+			fibs2[j] = malloc((lens2[j] + 1) * sizeof(char));
+			fibs2[j][0] = ONE;
+			memset(fibs2[j] + 1, ZERO, (lens2[j] - 1) * sizeof(char));
+			fibs2[j][lens2[j]] = '\0';
+			j++;
+		}
+	}
+
+	zrep *zsum = malloc(sizeof(zrep));
+
+	for (int k = num2 - 1; k >= 0; k--) {
+		for (int j = num1 - 1; j >= 0; j--) {
+			size_t summand_len;
 			char *summand = easy_mul(fibs1[j], fibs2[k], lens1[j], lens2[k], &summand_len);
-			if (k == n2 - 1 && j == n1 - 1) {
-				sum_len = summand_len;
-				sum = malloc((sum_len + 1) * sizeof(char));
-				memcpy(sum, summand, (summand_len + 1) * sizeof(char));
+			if (k == num2 - 1 && j == num1 - 1) {
+				zsum->val = summand;
+				zsum->len = summand_len;
 			} else {
-				char *temp = add_len(sum, summand, sum_len, summand_len, &sum_len);
-				sum = realloc(sum, (sum_len + 1) * sizeof(char));
-				memcpy(sum, temp, (sum_len + 1) * sizeof(char));
-				free(temp);
+				char *old = zsum->val;
+				zsum->val = add_len(zsum->val, summand, zsum->len, summand_len, &zsum->len);
+				free(old);
+				free(summand);
 			}
-			free(summand);
 		}
 	}
 
 	// clean-up
-	free(s1);
-	free(s2);
-
-	for (int i = 0; i < n1; i++) {
+	for (int i = 0; i < num1; i++) {
 		free(fibs1[i]);
 	}
 
-	for (int i = 0; i < n2; i++) {
+	for (int i = 0; i < num2; i++) {
 		free(fibs2[i]);
 	}
 
@@ -135,7 +129,5 @@ zrep z_mul(const zrep z1, const zrep z2) {
 	free(lens1);
 	free(lens2);
 
-	zrep zsum = strtozr(sum);
-	free(sum);
 	return zsum;
 }

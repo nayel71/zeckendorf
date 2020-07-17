@@ -10,20 +10,20 @@
 // Zeckendorf representations given by s1 and s2, and stores its length at rlen if rlen != NULL
 // requires: strlen(s1) == strlen(s2) == len, s1 and s2 contain possible leading ZEROs
 // effects: allocates memory (caller must free), updates *rlen if rlen != NULL
-static char *add_same_len(const char *s1, const char *s2, const int len, int *rlen) {
+static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rlen) {
 	const char TWO = ONE + 1;
 	const char THREE = TWO + 1;
 
 	if (s1[0] == ONE && s2[0] == ONE) {
 		char *cpy1 = malloc((len + 2) * sizeof(char));
-		cpy1[0] = ZERO;
 		memcpy(cpy1 + 1, s1, (len + 1) * sizeof(char));
+		cpy1[0] = ZERO;
 
 		char *cpy2 = malloc((len + 2) * sizeof(char));
-		cpy2[0] = ZERO;
 		memcpy(cpy2 + 1, s2, (len + 1) * sizeof(char));
+		cpy2[0] = ZERO;
 
-		zrep ans = add_same_len(cpy1, cpy2, len + 1, rlen);
+		char *ans = add_same_len(cpy1, cpy2, len + 1, rlen);
 		free(cpy1);
 		free(cpy2);
 		return ans;
@@ -122,7 +122,7 @@ static char *add_same_len(const char *s1, const char *s2, const int len, int *rl
 	return ans;
 }
 
-char *add_len(const char *s1, const char *s2, const int len1, const int len2, int *rlen) {
+char *add_len(const char *s1, const char *s2, size_t len1, size_t len2, size_t *rlen) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
 		char *cp = malloc((len1 + 1) * sizeof(char));
@@ -138,15 +138,8 @@ char *add_len(const char *s1, const char *s2, const int len1, const int len2, in
 	}
 }
 
-zrep z_add(const zrep z1, const zrep z2) {
-	char *s1 = zrtostr(z1);
-	char *s2 = zrtostr(z2);
-
-	char *ans = add_len(s1, s2, strlen(s1), strlen(s2), NULL);
-	free(s1);
-	free(s2);
-
-	zrep zans = strtozr(ans);
-	free(ans);
+zrep *z_add(const zrep *z1, const zrep *z2) {
+	zrep *zans = malloc(sizeof(zrep));
+	zans->val = add_len(z1->val, z2->val, z1->len, z2->len, &zans->len);
 	return zans;
 }

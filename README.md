@@ -7,63 +7,50 @@ Every positive integer has a unique representation as a sum of non-consecutive F
 ```C
 // zeckendorf.h
 
-// constants:
-extern const zint LIMIT;
-extern const char ZERO;
-extern const char ONE;
-
 // definitions:
-// - a zint is either zero or a non-zero return value of strtozi
-// - a zrep is either NULL or a non-NULL return value of strtozr
+// - a zint * is either NULL or a non-NULL return value of strtozi
+// - a zrep * is either NULL or a non-NULL return value of strtozr
 
 // informally,
 // - a zint represents a non-negative integer <= LIMIT
 // - a zrep represents a binary string consisting of ZEROs and ONEs,
 //   that starts with ONE and does not contain consecutive ONEs
 
-// strtozi(str) tries to convert str to a non-zero zint
-// returns the converted value if successful, returns zero otherwise
-zint strtozi(const char *str);
-
-// strtozr(str) tries to convert str to a non-NULL zrep
+// strtozi(str) tries to convert str to a non-NULL zint *
 // returns the converted value if successful, returns NULL otherwise
-// effects: allocates memory (caller must z_clear the return address)
-zrep strtozr(const char *str);
+// effects: allocates memory (caller must free)
+zint *strtozi(const char *str);
+
+// strtozr(str) tries to convert str to a non-NULL zrep *
+// returns the converted value if successful, returns NULL otherwise
+// effects: allocates memory (caller must call z_clear)
+zrep *strtozr(const char *str);
 
 // zrtostr(z) converts z to a string
 // requires: z is non-NULL
 // effects: allocates memory (caller must free)
-char *zrtostr(const zrep z);
-
-// z_length(z) returns the length of z
-// requires: z is non-NULL
-int z_length(const zrep z);
-
-// z_copy(z1, z2) copies z1 to z2
-// requires: z1 and *z2 are non-NULL
-// effects: reallocates memory to z2
-void z_copy(const zrep z1, zrep *z2);
+char *zrtostr(const zrep *z);
 
 // z_clear(z) frees the memory at z
-// requires: *z is non-NULL
+// requires: z is non-NULL
 void z_clear(zrep *z);
 
 // z_rep(n) returns the Zeckendorf representation of n
-// requires: n is non-zero
-// effects: allocates memory (caller must z_clear the return address)
-zrep z_rep(const zint n);
+// requires: n is non-NULL
+// effects: allocates memory (caller must call z_clear)
+zrep *z_rep(const zint *n);
 
 // arithmetic.h
 
 // z_add(z1, z2) returns the sum of z1 and z2
 // requires: z1 and z2 are non-NULL
-// effects: allocates memory (caller must z_clear the return address)
-zrep z_add(const zrep z1, const zrep z2);
+// effects: allocates memory (caller must call z_clear)
+zrep *z_add(const zrep *z1, const zrep *z2);
 
 // z_mul(z1, z2) returns the product of z1 and z2
 // requires: z1 and z2 are non-NULL
-// effects: allocates memory (caller must z_clear the return address)
-zrep z_mul(const zrep z1, const zrep z2);
+// effects: allocates memory (caller must call z_clear)
+zrep *z_mul(const zrep *z1, const zrep *z2);
 
 // error.h
 

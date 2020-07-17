@@ -5,12 +5,12 @@
 
 // z_add(z1, z2) returns the sum of z1 and z2
 // requires: z1 and z2 are non-NULL
-// effects: allocates memory (caller must z_clear the return address)
-zrep z_add(const zrep z1, const zrep z2);
+// effects: allocates memory (caller must call z_clear)
+zrep *z_add(const zrep *z1, const zrep *z2);
 
 // z_mul(z1, z2) returns the product of z1 and z2
 // requires: z1 and z2 are non-NULL
-// effects: allocates memory (caller must z_clear the return address)
-zrep z_mul(const zrep z1, const zrep z2);
+// effects: allocates memory (caller must call z_clear)
+zrep *z_mul(const zrep *z1, const zrep *z2);
 
 #endif /* ARITHMETIC_H */

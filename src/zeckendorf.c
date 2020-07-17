@@ -2,17 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-const zint LIMIT = 9217463444206948444;
+const long long LIMIT = 9217463444206948444;
 const char ZERO = '0';
 const char ONE = '1';
 
-zint strtozi(const char *str) {
-	char *endptr;
-	zint n = strtoll(str, &endptr, 0);
-	if (n > 0 && n <= LIMIT && !*endptr) {
-		return n;
+zint *strtozi(const char *str) {
+	char *end;
+	long long n = strtoll(str, &end, 0);
+	if (n > 0 && n <= LIMIT && !*end) {
+		zint *ans = malloc(sizeof(zint));
+		ans->val = n;
+		return ans;
 	} else {
-		return 0;
+		return NULL;
 	}
 }
 
@@ -29,65 +31,60 @@ static bool rep_is_valid(const char *s) {
 	return true;
 }
 
-zrep strtozr(const char *s) {
+zrep *strtozr(const char *s) {
 	if (rep_is_valid(s)) {
-		return strdup(s);
+		zrep *ans = malloc(sizeof(zrep));
+		ans->val = strdup(s);
+		ans->len = strlen(s);
+		return ans;
 	} else {
 		return NULL;
 	}
 }
 
-char *zrtostr(const zrep z) {
-	return strdup(z);
-}
-
-int z_length(const zrep z) {
-	return strlen(z);
-}
-
-void z_copy(const zrep z1, zrep *z2) {
-	int len = z_length(z1);
-	*z2 = realloc(*z2, (len + 1) * sizeof(char));
-	memcpy(*z2, z1, (len + 1) * sizeof(char));
+char *zrtostr(const zrep *z) {
+	return strdup(z->val);
 }
 
 void z_clear(zrep *z) {
-	free(*z);
+	free(z->val);
+	free(z);
 }
 
 // maxfib(n, index, fib) computes the largest Fibonacci number <= n,
-// stores it at fib and stores its index at index
-static void maxfib(const zint n, int *index, zint *fib) {
-	zint fib1 = 0;
-	zint fib2 = 1;
-	for (*index = 1; fib1 + fib2 <= n; ++*index) {
+// stores it at fib and stores its index at ind
+static void maxfib(const long long n, size_t *ind, long long *fib) {
+	long long fib1 = 0;
+	long long fib2 = 1;
+	for (*ind = 1; fib1 + fib2 <= n; ++*ind) {
 		*fib = fib1 + fib2;
 		fib1 = fib2;
 		fib2 = *fib;
 	}
 }
 
-zrep z_rep(const zint n) {
-	int index;
-	zint fib;
-	maxfib(n, &index, &fib);
+zrep *z_rep(const zint *n) {
+	size_t ind1;
+	long long fib;
+	maxfib(n->val, &ind1, &fib);
 
-	char *ans = malloc(index * sizeof(char));
-	int i = 0;
+	char *ans = malloc(ind1 * sizeof(char));
+	size_t pos = 0;
 
-	for (zint rem = n; rem > 0; maxfib(rem, &index, &fib)) {
+	for (long long rem = n->val; rem > 0; maxfib(rem, &ind1, &fib)) {
 		rem -= fib;
-		int next_index;
-		maxfib(rem, &next_index, &fib);
-		ans[i] = ONE;
-		memset(ans + i + 1, ZERO, (index - next_index - 1) * sizeof(char));
-		i += index - next_index;
+		size_t ind2;
+		maxfib(rem, &ind2, &fib);
+		ans[pos] = ONE;
+		memset(ans + pos + 1, ZERO, (ind1 - ind2 - 1) * sizeof(char));
+		pos += ind1 - ind2;
 		
 	} 
 
-	ans[i] = '\0'; // at this point, i == original index - 1 
+	ans[pos] = '\0'; // at this point, pos == original index - 1 
 
-	zrep zans = strtozr(ans);
-	free(ans);
+	zrep *zans = malloc(sizeof(zrep));
+	zans->val = ans;
+	zans->len = pos;
 	return zans;
 }

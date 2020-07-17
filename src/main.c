@@ -20,64 +20,65 @@ int main(int argc, char **argv) {
 	}
 
 	char *command = argv[1];
-	zrep ans = NULL;
+	zrep *ans = NULL;
 
 	if (argc == 2) {
-		zint n = strtozi(argv[1]);
+		zint *n = strtozi(argv[1]);
 		if (n) {
 			ans = z_rep(n);
+			free(n);
 		} else {
 			return z_error(ARG, argv[1]);
 		}
 	} else if (strcmp(command, "add") == 0 && argc > 3) {
-		zrep z1 = strtozr(argv[2]);
-		zrep z2 = strtozr(argv[3]);
+		zrep *z1 = strtozr(argv[2]);
+		zrep *z2 = strtozr(argv[3]);
 		if (!z1) {
-			z_clear(&z2);
+			z_clear(z2);
 			return z_error(REP, argv[2]);
 		} else if (!z2) {
-			z_clear(&z1);
+			z_clear(z1);
 			return z_error(REP, argv[3]);
 		} else {
 			ans = z_add(z1, z2);
-			z_clear(&z1);
-			z_clear(&z2);
+			z_clear(z1);
+			z_clear(z2);
 			for (int i = 4; i < argc; i++) {
 				z1 = strtozr(argv[i]);
 				if (!z1) {
-					z_clear(&ans);
+					z_clear(ans);
 					return z_error(REP, argv[i]);
 				} else {
-					z2 = z_add(ans, z1);
-					z_clear(&z1);
-					z_copy(z2, &ans);
-					z_clear(&z2);
+					z2 = z_add(z1, ans);
+					z_clear(z1);
+					z_clear(ans);
+					ans = z2;
 				}
 			}
 		}
 	} else if (strcmp(command, "mul") == 0 && argc > 3) {
-		zrep z1 = strtozr(argv[2]);
-		zrep z2 = strtozr(argv[3]);
+		zrep *z1 = strtozr(argv[2]);
+		zrep *z2 = strtozr(argv[3]);
 		if (!z1) {
-			z_clear(&z2);
+			z_clear(z2);
 			return z_error(REP, argv[2]);
 		} else if (!z2) {
-			z_clear(&z1);
+			z_clear(z1);
 			return z_error(REP, argv[3]);
 		} else {
 			ans = z_mul(z1, z2);
-			z_clear(&z1);
-			z_clear(&z2);
+			z_clear(z1);
+			z_clear(z2);
 			for (int i = 4; i < argc; i++) {
 				z1 = strtozr(argv[i]);
 				if (!z1) {
-					z_clear(&ans);
+					z_clear(ans);
 					return z_error(REP, argv[i]);
 				} else {
-					z2 = z_mul(ans, z1);
-					z_clear(&z1);
-					z_copy(z2, &ans);
-					z_clear(&z2);
+					z2 = z_mul(z1, ans);
+					z_clear(z1);
+					z_clear(ans);
+					ans = z2;
 				}
 			}
 		}
@@ -87,7 +88,7 @@ int main(int argc, char **argv) {
 	
 	if (ans) {
 		char *s = zrtostr(ans);
-		z_clear(&ans);
+		z_clear(ans);
 		puts(s);
 		free(s);
 	}
