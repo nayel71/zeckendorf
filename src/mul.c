@@ -4,9 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-// easy_mul(s1, s2, len1, len2, rlen) returns the string representation of the product of the
-// Zeckendorf representations given by s1 and s2, and stores its length at rlen
-// requires: strlen(s1) == len1 && strlen(s2) == len2 && rlen != NULL, s1 and s2 each contain a single ONE
+// easy_mul(s1, s2, len1, len2, rlen) returns a char array representing the product of Zeckendorf representations
+// given by s1 and s2, and stores its length at rlen
+// requires: s1 and s2 represent Zeckendorf representations of lengths len1 and len2 respectively each containing
+// a single ONE, rlen != NULL
 // effects: allocates memory (caller must free), updates *rlen
 static char *easy_mul(const char *s1, const char *s2, size_t len1, size_t len2, size_t *rlen) {
 	if (len2 < len1) {
