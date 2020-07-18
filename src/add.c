@@ -112,8 +112,8 @@ static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rl
 
 	// remove leading ZEROs
 	char *pos = memchr(ans, ONE, len * sizeof(char));
-	memmove(ans, pos, (len + 1 + ans - pos) * sizeof(char));
 	*rlen = len + 1 + ans - pos;
+	memmove(ans, pos, *rlen * sizeof(char));
 
 	return ans;
 }
