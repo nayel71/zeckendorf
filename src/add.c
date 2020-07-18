@@ -7,9 +7,9 @@
 // cf. paper by Frougny et al.
 
 // add_same_len(s1, s2, len, rlen) returns a char array representing the sum of Zeckendorf representations
-// given by s1 and s2, and stores its length at rlen if rlen != NULL
-// requires: s1 and s2 represent Zeckendorf representations of length len with possible leading ZEROs
-// effects: allocates memory (caller must free), updates *rlen if rlen != NULL
+// given by s1 and s2, and stores its length at rlen
+// requires: s1 and s2 represent Zeckendorf representations of length len with possible leading ZEROs, rlen != NULL
+// effects: allocates memory (caller must free), updates *rlen
 static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rlen) {
 	const char TWO = ONE + 1;
 	const char THREE = TWO + 1;
@@ -113,10 +113,7 @@ static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rl
 	// remove leading ZEROs
 	char *pos = memchr(ans, ONE, len * sizeof(char));
 	memmove(ans, pos, (len + 1 + ans - pos) * sizeof(char));
-
-	if (rlen) {
-		*rlen = len + 1 + ans - pos;
-	}
+	*rlen = len + 1 + ans - pos;
 
 	return ans;
 }
