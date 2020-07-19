@@ -19,7 +19,6 @@ int main(int argc, char **argv) {
 		return help(argv[0]);
 	}
 
-	char *command = argv[1];
 	zrep *ans = NULL;
 
 	if (argc == 2) {
@@ -30,8 +29,8 @@ int main(int argc, char **argv) {
 		} else {
 			return z_error(ARG, argv[1]);
 		}
-	} else if (argc > 3 && (strcmp(command, "add") == 0 || strcmp(command, "mul") == 0)) {
-		zrep *(*op)(const zrep *, const zrep *) = command[0] == 'a' ? z_add : z_mul;
+	} else if (argc > 3 && (strcmp(argv[1], "add") == 0 || strcmp(argv[1], "mul") == 0)) {
+		zrep *(*op)(const zrep *, const zrep *) = argv[1][0] == 'a' ? z_add : z_mul;
 		zrep *z1 = strtozr(argv[2]);
 		zrep *z2 = strtozr(argv[3]);
 		if (!z1) {
@@ -61,10 +60,8 @@ int main(int argc, char **argv) {
 		return help(argv[0]);
 	}
 	
-	if (ans) {
-		char *s = zrtostr(ans);
-		z_clear(ans);
-		puts(s);
-		free(s);
-	}
+	char *s = zrtostr(ans);
+	z_clear(ans);
+	puts(s);
+	free(s);
 }
