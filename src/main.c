@@ -30,7 +30,8 @@ int main(int argc, char **argv) {
 		} else {
 			return z_error(ARG, argv[1]);
 		}
-	} else if (strcmp(command, "add") == 0 && argc > 3) {
+	} else if (argc > 3 && (strcmp(command, "add") == 0 || strcmp(command, "mul") == 0)) {
+		zrep *(*op)(const zrep *, const zrep *) = command[0] == 'a' ? z_add : z_mul;
 		zrep *z1 = strtozr(argv[2]);
 		zrep *z2 = strtozr(argv[3]);
 		if (!z1) {
@@ -40,7 +41,7 @@ int main(int argc, char **argv) {
 			z_clear(z1);
 			return z_error(REP, argv[3]);
 		} else {
-			ans = z_add(z1, z2);
+			ans = (*op)(z1, z2);
 			z_clear(z1);
 			z_clear(z2);
 			for (int i = 4; i < argc; i++) {
@@ -49,33 +50,7 @@ int main(int argc, char **argv) {
 					z_clear(ans);
 					return z_error(REP, argv[i]);
 				} else {
-					z2 = z_add(z1, ans);
-					z_clear(z1);
-					z_clear(ans);
-					ans = z2;
-				}
-			}
-		}
-	} else if (strcmp(command, "mul") == 0 && argc > 3) {
-		zrep *z1 = strtozr(argv[2]);
-		zrep *z2 = strtozr(argv[3]);
-		if (!z1) {
-			z_clear(z2);
-			return z_error(REP, argv[2]);
-		} else if (!z2) {
-			z_clear(z1);
-			return z_error(REP, argv[3]);
-		} else {
-			ans = z_mul(z1, z2);
-			z_clear(z1);
-			z_clear(z2);
-			for (int i = 4; i < argc; i++) {
-				z1 = strtozr(argv[i]);
-				if (!z1) {
-					z_clear(ans);
-					return z_error(REP, argv[i]);
-				} else {
-					z2 = z_mul(z1, ans);
+					z2 = (*op)(z1, ans);
 					z_clear(z1);
 					z_clear(ans);
 					ans = z2;
