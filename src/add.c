@@ -23,7 +23,7 @@ static char *add_same_len(const char *s1, const char *s2, size_t len, size_t *rl
 		memcpy(cpy2 + 1, s2, len * sizeof(char));
 		cpy2[0] = ZERO;
 
-		char *ans = add_same_len(cpy1, cpy2, len, rlen);
+		char *ans = add_same_len(cpy1, cpy2, len + 1, rlen);
 		free(cpy1);
 		free(cpy2);
 		return ans;
