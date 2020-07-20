@@ -39,9 +39,7 @@ int main(int argc, char **argv) {
 			}
 			return z_error(REP, argv[2]);
 		} else if (!z2) {
-			if (z1) {
-				z_clear(z1);
-			}
+			z_clear(z1);
 			return z_error(REP, argv[3]);
 		} else {
 			ans = (*op)(z1, z2);
