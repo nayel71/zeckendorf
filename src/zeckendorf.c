@@ -51,10 +51,8 @@ char *zrtostr(const zrep *z) {
 }
 
 void z_clear(zrep *z) {
-	if (z) {
-		free(z->val);
-		free(z);
-	}
+	free(z->val);
+	free(z);
 }
 
 // maxfib(n, index, fib) computes the largest Fibonacci number <= n,

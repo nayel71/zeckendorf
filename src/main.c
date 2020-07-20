@@ -34,10 +34,14 @@ int main(int argc, char **argv) {
 		zrep *z1 = strtozr(argv[2]);
 		zrep *z2 = strtozr(argv[3]);
 		if (!z1) {
-			z_clear(z2);
+			if (z2) {
+				z_clear(z2);
+			}
 			return z_error(REP, argv[2]);
 		} else if (!z2) {
-			z_clear(z1);
+			if (z1) {
+				z_clear(z1);
+			}
 			return z_error(REP, argv[3]);
 		} else {
 			ans = (*op)(z1, z2);
