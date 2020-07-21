@@ -14,7 +14,7 @@ typedef struct {
 
 typedef struct {
 	char *val; // a char array, not a string
-	size_t len; // length of the char array
+	int len; // length of the char array
 } zrep;
 
 #endif /* TYPES_H */

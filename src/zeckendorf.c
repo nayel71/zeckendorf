@@ -57,7 +57,7 @@ void z_clear(zrep *z) {
 
 // maxfib(n, index, fib) computes the largest Fibonacci number <= n,
 // stores it at fib and stores its index at ind
-static void maxfib(const long long n, size_t *ind, long long *fib) {
+static void maxfib(const long long n, int *ind, long long *fib) {
 	long long fib1 = 0;
 	long long fib2 = 1;
 	for (*ind = 1; fib1 + fib2 <= n; ++*ind) {
@@ -68,16 +68,16 @@ static void maxfib(const long long n, size_t *ind, long long *fib) {
 }
 
 zrep *z_rep(const zint *n) {
-	size_t ind1;
+	int ind1;
 	long long fib;
 	maxfib(n->val, &ind1, &fib);
 
 	char *ans = malloc(ind1 * sizeof(char));
-	size_t pos = 0;
+	int pos = 0;
 
 	for (long long rem = n->val; rem > 0; maxfib(rem, &ind1, &fib)) {
 		rem -= fib;
-		size_t ind2;
+		int ind2;
 		maxfib(rem, &ind2, &fib);
 		ans[pos] = ONE;
 		memset(ans + pos + 1, ZERO, (ind1 - ind2 - 1) * sizeof(char));

@@ -8,7 +8,7 @@
 // of lengths len1 and len2 each containing a single ONE, and stores its length at rlen
 // requires: rlen != NULL
 // effects: allocates memory (caller must free), updates *rlen
-static char *easy_mul(const size_t len1, const size_t len2, size_t *rlen) {
+static char *easy_mul(const int len1, const int len2, int *rlen) {
 	if (len2 < len1) {
 		return easy_mul(len2, len1, rlen);
 	}
@@ -90,7 +90,7 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 
 	for (int k = num2 - 1; k >= 0; k--) {
 		for (int j = num1 - 1; j >= 0; j--) {
-			size_t summand_len;
+			int summand_len;
 			char *summand = easy_mul(lens1[j], lens2[k], &summand_len);
 			if (k == num2 - 1 && j == num1 - 1) {
 				zsum->val = summand;
