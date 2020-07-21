@@ -8,11 +8,11 @@ extern const long long LIMIT;
 extern const char ZERO;
 extern const char ONE;
 
-typedef struct zint {
+typedef struct {
 	long long val;
 } zint;
 
-typedef struct zrep {
+typedef struct {
 	char *val; // a char array, not a string
 	size_t len; // length of the char array
 } zrep;
