@@ -4,14 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-// easy_mul(s1, s2, len1, len2, rlen) returns a char array representing the product of Zeckendorf representations
-// given by s1 and s2, and stores its length at rlen
-// requires: s1 and s2 represent Zeckendorf representations of lengths len1 and len2 respectively each containing
-// a single ONE, rlen != NULL
+// easy_mul(len1, len2, rlen) returns a char array representing the product of Zeckendorf representations
+// of lengths len1 and len2 each containing a single ONE, and stores its length at rlen
+// requires: rlen != NULL
 // effects: allocates memory (caller must free), updates *rlen
-static char *easy_mul(const char *s1, const char *s2, size_t len1, size_t len2, size_t *rlen) {
+static char *easy_mul(const int len1, const int len2, int *rlen) {
 	if (len2 < len1) {
-		return easy_mul(s2, s1, len2, len1, rlen);
+		return easy_mul(len2, len1, rlen);
 	}
 
 	*rlen = len1 + len2 - 1;
@@ -70,17 +69,12 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 		}
 	}
 
-	char **fibs1 = malloc(num1 * sizeof(char *));
-	char **fibs2 = malloc(num2 * sizeof(char *));
 	int *lens1 = malloc(num1 * sizeof(int));
 	int *lens2 = malloc(num2 * sizeof(int));
 
 	for (int i = 0, j = 0; i < len1; i++) {
 		if (s1[i] == ONE) {
 			lens1[j] = len1 - i;
-			fibs1[j] = malloc(lens1[j] * sizeof(char));
-			fibs1[j][0] = ONE;
-			memset(fibs1[j] + 1, ZERO, (lens1[j] - 1) * sizeof(char));
 			j++;
 		}
 	}
@@ -88,9 +82,6 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 	for (int i = 0, j = 0; i < len2; i++) {
 		if (s2[i] == ONE) {
 			lens2[j] = len2 - i;
-			fibs2[j] = malloc(lens2[j] * sizeof(char));
-			fibs2[j][0] = ONE;
-			memset(fibs2[j] + 1, ZERO, (lens2[j] - 1) * sizeof(char));
 			j++;
 		}
 	}
@@ -99,8 +90,8 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 
 	for (int k = num2 - 1; k >= 0; k--) {
 		for (int j = num1 - 1; j >= 0; j--) {
-			size_t summand_len;
-			char *summand = easy_mul(fibs1[j], fibs2[k], lens1[j], lens2[k], &summand_len);
+			int summand_len;
+			char *summand = easy_mul(lens1[j], lens2[k], &summand_len);
 			if (k == num2 - 1 && j == num1 - 1) {
 				zsum->val = summand;
 				zsum->len = summand_len;
@@ -114,16 +105,6 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 	}
 
 	// clean-up
-	for (int i = 0; i < num1; i++) {
-		free(fibs1[i]);
-	}
-
-	for (int i = 0; i < num2; i++) {
-		free(fibs2[i]);
-	}
-
-	free(fibs1);
-	free(fibs2);
 	free(lens1);
 	free(lens2);
 
