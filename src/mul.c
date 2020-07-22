@@ -8,7 +8,7 @@
 // of lengths len1 and len2 each containing a single ONE, and stores its length at rlen
 // requires: rlen != NULL
 // effects: allocates memory (caller must free), updates *rlen
-static char *easy_mul(const int len1, const int len2, int *rlen) {
+static char *easy_mul(const size_t len1, const size_t len2, size_t *rlen) {
 	if (len2 < len1) {
 		return easy_mul(len2, len1, rlen);
 	}
@@ -16,11 +16,11 @@ static char *easy_mul(const int len1, const int len2, int *rlen) {
 	*rlen = len1 + len2 - 1;
 	char *ans = malloc(*rlen * sizeof(char));
 
-	const int ind1 = len1 + 1;
-	const int ind2 = len2 + 1;
-	const int rem = ind1 % 2;
+	const size_t ind1 = len1 + 1;
+	const size_t ind2 = len2 + 1;
+	const size_t rem = ind1 % 2;
 
-	for (int j = 0; j < 2 * ind1 - 4 - 2 * rem; j++) {
+	for (size_t j = 0; j < 2 * ind1 - 4 - 2 * rem; ++j) {
 		if (j % 4 == 0) {
 			ans[j] = ONE;
 		} else {
@@ -41,8 +41,8 @@ static char *easy_mul(const int len1, const int len2, int *rlen) {
 		ans[2 * ind1 - 3] = ONE;
 	}
 
-	for (int j = 1; j <= ind2 - ind1 - rem; j++) {
-		ans[2 * ind1 - 4 + rem + j] = ZERO;
+	for (size_t j = 1; j + rem <= ind2 - ind1; ++j) {
+		ans[2 * ind1 - 4 + j + rem] = ZERO;
 	}
 
 	return ans;
@@ -52,47 +52,47 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 	// split z1 and z2 into sums of Fibonacci numbers, then multiply everything out
 	char *s1 = z1->val;
 	char *s2 = z2->val;
-	int len1 = z1->len;
-	int len2 = z2->len;
-	int num1 = 0; // number of ONEs in z1
-	int num2 = 0; // number of ONEs in z2
+	size_t len1 = z1->len;
+	size_t len2 = z2->len;
+	size_t num1 = 0; // number of ONEs in z1
+	size_t num2 = 0; // number of ONEs in z2
 
-	for (int i = 0; i < len1; ++i) {
+	for (size_t i = 0; i < len1; ++i) {
 		if (s1[i] == ONE) {
-			num1++;
+			++num1;
 		}
 	}
 
-	for (int i = 0; i < len2; ++i) {
+	for (size_t i = 0; i < len2; ++i) {
 		if (s2[i] == ONE) {
-			num2++;
+			++num2;
 		}
 	}
 
-	int *lens1 = malloc(num1 * sizeof(int));
-	int *lens2 = malloc(num2 * sizeof(int));
+	size_t *lens1 = malloc(num1 * sizeof(size_t));
+	size_t *lens2 = malloc(num2 * sizeof(size_t));
 
-	for (int i = 0, j = 0; i < len1; i++) {
+	for (size_t i = 0, j = 0; i < len1; ++i) {
 		if (s1[i] == ONE) {
 			lens1[j] = len1 - i;
-			j++;
+			++j;
 		}
 	}
 
-	for (int i = 0, j = 0; i < len2; i++) {
+	for (size_t i = 0, j = 0; i < len2; ++i) {
 		if (s2[i] == ONE) {
 			lens2[j] = len2 - i;
-			j++;
+			++j;
 		}
 	}
 
 	zrep *zsum = malloc(sizeof(zrep));
 
-	for (int k = num2 - 1; k >= 0; k--) {
-		for (int j = num1 - 1; j >= 0; j--) {
-			int summand_len;
-			char *summand = easy_mul(lens1[j], lens2[k], &summand_len);
-			if (k == num2 - 1 && j == num1 - 1) {
+	for (size_t k = num2; k > 0; --k) {
+		for (size_t j = num1; j > 0; --j) {
+			size_t summand_len;
+			char *summand = easy_mul(lens1[j - 1], lens2[k - 1], &summand_len);
+			if (k == num2 && j == num1) {
 				zsum->val = summand;
 				zsum->len = summand_len;
 			} else {

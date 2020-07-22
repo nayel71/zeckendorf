@@ -16,15 +16,15 @@ Every positive integer has a unique representation as a sum of non-consecutive F
 // - a zrep represents a string of ZEROs and ONEs starting with ONE,
 //   that does not contain consecutive ONEs
 
-// strtozi(str) tries to convert str to a non-NULL zint *
+// strtozi(s) tries to convert s to a non-NULL zint *
 // returns the converted value if successful, returns NULL otherwise
 // effects: allocates memory (caller must free)
-zint *strtozi(const char *str);
+zint *strtozi(const char *s);
 
-// strtozr(str) tries to convert str to a non-NULL zrep *
+// strtozr(s) tries to convert s to a non-NULL zrep *
 // returns the converted value if successful, returns NULL otherwise
 // effects: allocates memory (caller must call z_clear)
-zrep *strtozr(const char *str);
+zrep *strtozr(const char *s);
 
 // zrtostr(z) converts z to a string
 // requires: z is non-NULL

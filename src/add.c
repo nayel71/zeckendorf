@@ -10,7 +10,7 @@
 // given by s1 and s2, and stores its length at rlen
 // requires: s1 and s2 represent Zeckendorf representations of length len with possible leading ZEROs, rlen != NULL
 // effects: allocates memory (caller must free), updates *rlen
-static char *add_same_len(const char *s1, const char *s2, const int len, int *rlen) {
+static char *add_same_len(const char *s1, const char *s2, const size_t len, size_t *rlen) {
 	const char TWO = ONE + 1;
 	const char THREE = TWO + 1;
 
@@ -33,7 +33,7 @@ static char *add_same_len(const char *s1, const char *s2, const int len, int *rl
 	ans[0] = ZERO; 
 	
 	// add pointwise
-	for (int i = 1; i <= len; i++) {
+	for (size_t i = 1; i <= len; ++i) {
 		if (s1[i - 1] != s2[i - 1]) {
 			ans[i] = ONE;
 		} else if (s1[i - 1] == s2[i - 1] && s1[i - 1] == ONE) {
@@ -46,7 +46,7 @@ static char *add_same_len(const char *s1, const char *s2, const int len, int *rl
 	// first stage
 
 	// eliminate TWOs
-	for (int i = 0; i <= len - 2; i++) {
+	for (size_t i = 0; i <= len - 2; ++i) {
 		if (i < len - 2 && ans[i] == ZERO && ans[i + 1] == TWO && ans[i + 2] == ZERO) {
 			ans[i] = ONE;
 			ans[i + 1] = ZERO;
@@ -93,7 +93,7 @@ static char *add_same_len(const char *s1, const char *s2, const int len, int *rl
 	// second stage
 	
 	// first pass from right to left
-	for (int i = len; i >= 2; i--) {
+	for (size_t i = len; i >= 2; --i) {
 		if (ans[i] == ONE && ans[i - 1] == ONE && ans[i - 2] == ZERO) {
 			ans[i] = ZERO;
 			ans[i - 1] = ZERO;
@@ -102,7 +102,7 @@ static char *add_same_len(const char *s1, const char *s2, const int len, int *rl
 	}
 
 	// second pass from left to right
-	for (int i = 0; i <= len - 2; i++) {
+	for (size_t i = 0; i <= len - 2; ++i) {
 		if (ans[i] == ZERO && ans[i + 1] == ONE && ans[i + 2] == ONE) {
 			ans[i] = ONE;
 			ans[i + 1] = ZERO;
@@ -118,7 +118,7 @@ static char *add_same_len(const char *s1, const char *s2, const int len, int *rl
 	return ans;
 }
 
-char *add_len(const char *s1, const char *s2, const int len1, const int len2, int *rlen) {
+char *add_len(const char *s1, const char *s2, const size_t len1, const size_t len2, size_t *rlen) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
 		char *cp = malloc(len1 * sizeof(char));

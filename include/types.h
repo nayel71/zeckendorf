@@ -1,6 +1,8 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <stddef.h>
+
 // constants:
 extern const long long LIMIT;
 extern const char ZERO;
@@ -12,7 +14,7 @@ typedef struct {
 
 typedef struct {
 	char *val; // a char array, not a string
-	int len; // length of the char array
+	size_t len; // length of the char array
 } zrep;
 
 #endif /* TYPES_H */
