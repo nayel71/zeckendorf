@@ -1,20 +1,19 @@
 #include "../include/zeckendorf.h"
 #include "../include/arithmetic.h"
-#include "add.h"
 #include <stdlib.h>
 #include <string.h>
 
-// easy_mul(len1, len2, rlen) returns a char array representing the product of Zeckendorf representations
-// of lengths len1 and len2 each containing a single ONE, and stores its length at rlen
-// requires: rlen != NULL
-// effects: allocates memory (caller must free), updates *rlen
-static char *easy_mul(const size_t len1, const size_t len2, size_t *rlen) {
+// easy_mul(len1, len2, rlen) returns the product of Zeckendorf representations of lengths len1 and len2
+// each containing a single ONE
+// effects: allocates memory (caller must call z_clear)
+static zrep *easy_mul(const size_t len1, const size_t len2) {
 	if (len2 < len1) {
-		return easy_mul(len2, len1, rlen);
+		return easy_mul(len2, len1);
 	}
 
-	*rlen = len1 + len2 - 1;
-	char *ans = malloc(*rlen * sizeof(char));
+	zrep *zans = malloc(sizeof(zrep));
+	zans->len = len1 + len2 - 1;
+	char *ans = malloc(zans->len * sizeof(char));
 
 	const size_t ind1 = len1 + 1;
 	const size_t ind2 = len2 + 1;
@@ -28,9 +27,9 @@ static char *easy_mul(const size_t len1, const size_t len2, size_t *rlen) {
 		}
 	}
 
-	if (ind2 >= ind1 && rem == 0) {
+	if (rem == 0) {
 		ans[2 * ind1 - 4] = ONE;
-	} else if (ind2 == ind1 && rem == 1) {
+	} else if (ind2 == ind1) {
 		ans[2 * ind1 - 6] = ONE;
 		ans[2 * ind1 - 5] = ZERO;
 		ans[2 * ind1 - 4] = ONE;
@@ -45,7 +44,8 @@ static char *easy_mul(const size_t len1, const size_t len2, size_t *rlen) {
 		ans[2 * ind1 - 4 + j] = ZERO;
 	}
 
-	return ans;
+	zans->val = ans;
+	return zans;
 }
 
 zrep *z_mul(const zrep *z1, const zrep *z2) {
@@ -86,20 +86,18 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 		}
 	}
 
-	zrep *zsum = malloc(sizeof(zrep));
+	zrep *sum;
 
 	for (size_t k = num2; k > 0; --k) {
 		for (size_t j = num1; j > 0; --j) {
-			size_t summand_len;
-			char *summand = easy_mul(lens1[j - 1], lens2[k - 1], &summand_len);
+			zrep *summand = easy_mul(lens1[j - 1], lens2[k - 1]);
 			if (k == num2 && j == num1) {
-				zsum->val = summand;
-				zsum->len = summand_len;
+				sum = summand;
 			} else {
-				char *old = zsum->val;
-				zsum->val = add_len(zsum->val, summand, zsum->len, summand_len, &zsum->len);
-				free(old);
-				free(summand);
+				zrep *temp = sum;
+				sum = z_add(sum, summand);
+				z_clear(temp);
+				z_clear(summand);
 			}
 		}
 	}
@@ -108,5 +106,5 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 	free(lens1);
 	free(lens2);
 
-	return zsum;
+	return sum;
 }

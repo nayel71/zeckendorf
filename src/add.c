@@ -1,16 +1,14 @@
 #include "../include/zeckendorf.h"
 #include "../include/arithmetic.h"
-#include "add.h"
 #include <stdlib.h>
 #include <string.h>
 
 // cf. paper by Frougny et al.
 
-// add_same_len(s1, s2, len, rlen) returns a char array representing the sum of Zeckendorf representations
-// given by s1 and s2, and stores its length at rlen
-// requires: s1 and s2 represent Zeckendorf representations of length len with possible leading ZEROs, rlen != NULL
-// effects: allocates memory (caller must free), updates *rlen
-static char *add_same_len(const char *s1, const char *s2, const size_t len, size_t *rlen) {
+// add_same_len(s1, s2, len) returns the sum of Zeckendorf representations given by s1 and s2
+// requires: s1 and s2 are char arrays of length len representing Zeckendorf representations with possible leading ZEROs
+// effects: allocates memory (caller must call z_clear)
+static zrep *add_same_len(const char *s1, const char *s2, const size_t len) {
 	const char TWO = ONE + 1;
 	const char THREE = TWO + 1;
 
@@ -23,10 +21,10 @@ static char *add_same_len(const char *s1, const char *s2, const size_t len, size
 		memcpy(cpy2 + 1, s2, len * sizeof(char));
 		cpy2[0] = ZERO;
 
-		char *ans = add_same_len(cpy1, cpy2, len + 1, rlen);
+		zrep *zans = add_same_len(cpy1, cpy2, len + 1);
 		free(cpy1);
 		free(cpy2);
-		return ans;
+		return zans;
 	}
 	
 	char *ans = malloc((len + 1) * sizeof(char)); 
@@ -112,30 +110,32 @@ static char *add_same_len(const char *s1, const char *s2, const size_t len, size
 
 	// remove leading ZEROs
 	char *pos = memchr(ans, ONE, len * sizeof(char));
-	*rlen = len + 1 + ans - pos;
-	memmove(ans, pos, *rlen * sizeof(char));
+	zrep *zans = malloc(sizeof(zrep));
+	zans->len = len + 1 + ans - pos;
+	zans->val = memmove(ans, pos, zans->len * sizeof(char));
 
-	return ans;
+	return zans;
 }
 
-char *add_len(const char *s1, const char *s2, const size_t len1, const size_t len2, size_t *rlen) {
+// add_len(s1, s2, len1, len2, len) returns the sum of Zeckendorf representations given by s1 and s2
+// requires: s1 and s2 are char arrays of lengths len1 and len2 respectively representing Zeckendorf representations
+// effects: allocates memory (caller must call z_clear)
+static zrep *add_len(const char *s1, const char *s2, const size_t len1, const size_t len2) {
 	// add leading ZEROs to make lengths equal, then use add_same_len
 	if (len1 > len2) {
 		char *cp = malloc(len1 * sizeof(char));
 		memset(cp, ZERO, (len1 - len2) * sizeof(char));
 		memcpy(cp + len1 - len2, s2, len2 * sizeof(char));
-		char *ans = add_same_len(s1, cp, len1, rlen);
+		zrep *ans = add_same_len(s1, cp, len1);
 		free(cp);
 		return ans;
 	} else if (len1 < len2) {
-		return add_len(s2, s1, len2, len1, rlen);
+		return add_len(s2, s1, len2, len1);
 	} else {
-		return add_same_len(s1, s2, len1, rlen);
+		return add_same_len(s1, s2, len1);
 	}
 }
 
 zrep *z_add(const zrep *z1, const zrep *z2) {
-	zrep *zans = malloc(sizeof(zrep));
-	zans->val = add_len(z1->val, z2->val, z1->len, z2->len, &zans->len);
-	return zans;
+	return add_len(z1->val, z2->val, z1->len, z2->len);
 }
