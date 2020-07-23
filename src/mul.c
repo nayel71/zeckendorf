@@ -41,8 +41,8 @@ static char *easy_mul(const size_t len1, const size_t len2, size_t *rlen) {
 		ans[2 * ind1 - 3] = ONE;
 	}
 
-	for (size_t j = 1; j + rem <= ind2 - ind1; ++j) {
-		ans[2 * ind1 - 4 + j + rem] = ZERO;
+	for (size_t j = rem + 1; j <= ind2 - ind1; ++j) {
+		ans[2 * ind1 - 4 + j] = ZERO;
 	}
 
 	return ans;
