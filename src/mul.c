@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// easy_mul(len1, len2, rlen) returns the product of Zeckendorf representations of lengths len1 and len2
+// easy_mul(len1, len2) returns the product of Zeckendorf representations of lengths len1 and len2
 // each containing a single ONE
 // effects: allocates memory (caller must call z_clear)
 static zrep *easy_mul(const size_t len1, const size_t len2) {
@@ -17,17 +17,17 @@ static zrep *easy_mul(const size_t len1, const size_t len2) {
 
 	const size_t ind1 = len1 + 1;
 	const size_t ind2 = len2 + 1;
-	const size_t rem = ind1 % 2;
+	const int rem = ind1 & 1; // remainder mod 2
 
 	for (size_t j = 0; j < 2 * ind1 - 4 - 2 * rem; ++j) {
-		if (j % 4 == 0) {
+		if (!(j & 3)) { // j is 0 mod 4
 			ans[j] = ONE;
 		} else {
 			ans[j] = ZERO;
 		}
 	}
 
-	if (rem == 0) {
+	if (!rem) {
 		ans[2 * ind1 - 4] = ONE;
 	} else if (ind2 == ind1) {
 		ans[2 * ind1 - 6] = ONE;
@@ -40,8 +40,8 @@ static zrep *easy_mul(const size_t len1, const size_t len2) {
 		ans[2 * ind1 - 3] = ONE;
 	}
 
-	for (size_t j = rem + 1; j <= ind2 - ind1; ++j) {
-		ans[2 * ind1 - 4 + j] = ZERO;
+	for (size_t j = rem; j < ind2 - ind1; ++j) {
+		ans[2 * ind1 - 3 + j] = ZERO;
 	}
 
 	zans->val = ans;
