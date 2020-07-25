@@ -1,8 +1,15 @@
 #ifndef ZECKENDORF_H
 #define ZECKENDORF_H
 
-#include "types.h"
 #include <stdbool.h>
+
+// constants:
+extern const long long LIMIT;
+extern const char ZERO;
+extern const char ONE;
+
+typedef struct zint zint;
+typedef struct zrep zrep;
 
 // definitions:
 // - a zint * is a return value of strtozi
@@ -28,8 +35,9 @@ zrep *strtozr(const char *s);
 // effects: allocates memory (caller must free)
 char *zrtostr(const zrep *z);
 
-// z_clear(z) frees the memory at z
+// z_clear(z) frees all memory associated with z
 // requires: z is non-NULL
+// effects: memory associated with z is invalid
 void z_clear(zrep *z);
 
 // z_rep(n) returns the Zeckendorf representation of n

@@ -1,7 +1,7 @@
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
-#include "types.h"
+#include "zeckendorf.h"
 
 // z_add(z1, z2) returns the sum of z1 and z2
 // requires: z1 and z2 are non-NULL

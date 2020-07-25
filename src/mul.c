@@ -1,7 +1,7 @@
-#include "../include/zeckendorf.h"
-#include "../include/arithmetic.h"
+#include <zeckendorf.h>
+#include <arithmetic.h>
+#include "zrep.h"
 #include <stdlib.h>
-#include <string.h>
 
 // easy_mul(len1, len2) returns the product of Zeckendorf representations of lengths len1 and len2
 // each containing a single ONE
@@ -11,13 +11,12 @@ static zrep *easy_mul(const size_t len1, const size_t len2) {
 		return easy_mul(len2, len1);
 	}
 
-	zrep *zans = malloc(sizeof(zrep));
-	zans->len = len1 + len2 - 1;
-	char *ans = malloc(zans->len * sizeof(char));
+	size_t len = len1 + len2 - 1;
+	char *ans = malloc(len * sizeof(char));
 
-	const size_t ind1 = len1 + 1;
-	const size_t ind2 = len2 + 1;
-	const int rem = ind1 & 1; // remainder mod 2
+	size_t ind1 = len1 + 1;
+	size_t ind2 = len2 + 1;
+	int rem = ind1 & 1; // remainder mod 2
 
 	for (size_t j = 0; j < 2 * ind1 - 4 - 2 * rem; ++j) {
 		if (!(j & 3)) { // j is 0 mod 4
@@ -44,16 +43,15 @@ static zrep *easy_mul(const size_t len1, const size_t len2) {
 		ans[2 * ind1 - 3 + j] = ZERO;
 	}
 
-	zans->val = ans;
-	return zans;
+	return zrep_new(ans, len);
 }
 
 zrep *z_mul(const zrep *z1, const zrep *z2) {
 	// split z1 and z2 into sums of Fibonacci numbers, then multiply everything out
-	char *s1 = z1->val;
-	char *s2 = z2->val;
-	size_t len1 = z1->len;
-	size_t len2 = z2->len;
+	char *s1 = zrep_arr(z1);
+	char *s2 = zrep_arr(z2);
+	size_t len1 = zrep_len(z1);
+	size_t len2 = zrep_len(z2);
 	size_t num1 = 0; // number of ONEs in z1
 	size_t num2 = 0; // number of ONEs in z2
 

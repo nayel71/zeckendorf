@@ -7,6 +7,14 @@ Every positive integer has a unique representation as a sum of non-consecutive F
 ```C
 // zeckendorf.h
 
+// constants:
+extern const long long LIMIT;
+extern const char ZERO;
+extern const char ONE;
+
+typedef struct zint zint;
+typedef struct zrep zrep;
+
 // definitions:
 // - a zint * is a return value of strtozi
 // - a zrep * is a return value of strtozr
@@ -31,8 +39,9 @@ zrep *strtozr(const char *s);
 // effects: allocates memory (caller must free)
 char *zrtostr(const zrep *z);
 
-// z_clear(z) frees the memory at z
+// z_clear(z) frees all memory associated with z
 // requires: z is non-NULL
+// effects: memory associated with z is invalid
 void z_clear(zrep *z);
 
 // z_rep(n) returns the Zeckendorf representation of n

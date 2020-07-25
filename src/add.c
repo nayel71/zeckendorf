@@ -1,5 +1,6 @@
-#include "../include/zeckendorf.h"
-#include "../include/arithmetic.h"
+#include <zeckendorf.h>
+#include <arithmetic.h>
+#include "zrep.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -110,11 +111,8 @@ static zrep *add_same_len(const char *s1, const char *s2, const size_t len) {
 
 	// remove leading ZEROs
 	char *pos = memchr(ans, ONE, len * sizeof(char));
-	zrep *zans = malloc(sizeof(zrep));
-	zans->len = len + 1 + ans - pos;
-	zans->val = memmove(ans, pos, zans->len * sizeof(char));
-
-	return zans;
+	size_t ans_len = len + 1 + ans - pos;
+	return zrep_new(memmove(ans, pos, ans_len * sizeof(char)), ans_len);
 }
 
 // add_len(s1, s2, len1, len2, len) returns the sum of Zeckendorf representations given by s1 and s2
@@ -137,5 +135,5 @@ static zrep *add_len(const char *s1, const char *s2, const size_t len1, const si
 }
 
 zrep *z_add(const zrep *z1, const zrep *z2) {
-	return add_len(z1->val, z2->val, z1->len, z2->len);
+	return add_len(zrep_arr(z1), zrep_arr(z2), zrep_len(z1), zrep_len(z2));
 }

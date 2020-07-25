@@ -1,6 +1,6 @@
-#include "../include/zeckendorf.h"
-#include "../include/arithmetic.h"
-#include "../include/error.h"
+#include <zeckendorf.h>
+#include <arithmetic.h>
+#include <error.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

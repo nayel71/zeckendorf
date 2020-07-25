@@ -1,10 +1,15 @@
-#include "../include/zeckendorf.h"
+#include <zeckendorf.h>
+#include "zrep.h"
 #include <stdlib.h>
 #include <string.h>
 
 const long long LIMIT = 9217463444206948444;
 const char ZERO = '0';
 const char ONE = '1';
+
+struct zint {
+	long long val;
+};
 
 zint *strtozi(const char *s) {
 	char *end;
@@ -33,26 +38,24 @@ static bool rep_is_valid(const char *s) {
 
 zrep *strtozr(const char *s) {
 	if (rep_is_valid(s)) {
-		zrep *ans = malloc(sizeof(zrep));
-		ans->len = strlen(s);
-		ans->val = malloc(ans->len * sizeof(char));
-		memcpy(ans->val, s, ans->len * sizeof(char));
-		return ans;
+		size_t len = strlen(s);
+		char *copy = malloc(len * sizeof(char));
+		return zrep_new(memcpy(copy, s, len * sizeof(char)), len);
 	} else {
 		return NULL;
 	}
 }
 
 char *zrtostr(const zrep *z) {
-	char *s = malloc((z->len + 1) * sizeof(char));
-	memcpy(s, z->val, z->len * sizeof(char));
-	s[z->len] = '\0';
+	size_t len = zrep_len(z);
+	char *s = malloc((len + 1) * sizeof(char));
+	memcpy(s, zrep_arr(z), len * sizeof(char));
+	s[len] = '\0';
 	return s;
 }
 
 void z_clear(zrep *z) {
-	free(z->val);
-	free(z);
+	zrep_free(z);
 }
 
 // maxfib(n, index, fib) computes the largest Fibonacci number <= n,
@@ -85,8 +88,5 @@ zrep *z_rep(const zint *n) {
 		
 	} 
 
-	zrep *zans = malloc(sizeof(zrep));
-	zans->val = ans;
-	zans->len = pos;
-	return zans;
+	return zrep_new(ans, pos);
 }
