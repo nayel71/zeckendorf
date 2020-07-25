@@ -28,7 +28,7 @@ typedef struct zrep zrep;
 // strtoz(typ, s) tries to convert s to a non-NULL zint * or zrep  *
 // returns the converted value if successful, returns NULL otherwise
 // effects: allocates memory (caller must call z_clear)
-void *strtoz(ztype type, const char *s);
+void *strtoz(ztype typ, const char *s);
 
 // zrtostr(z) converts z to a string
 // requires: z is non-NULL

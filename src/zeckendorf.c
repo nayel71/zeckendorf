@@ -96,7 +96,7 @@ void z_clear(ztype typ, void *ptr) {
 		free(ptr);
 		break;
 	case REP:
-		zrep_free((zrep *)ptr);
+		zrep_free(ptr);
 	}
 }
 
