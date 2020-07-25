@@ -63,6 +63,8 @@ zrep *z_mul(const zrep *z1, const zrep *z2);
 
 // error.h
 
+typedef enum {ARG, REP} zerror_t;
+
 // z_error(err, param) prints an error message regarding param based on
 // the type of err to stderr and returns EXIT_FAILURE
 // effects: prints output
