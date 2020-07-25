@@ -15,10 +15,6 @@ static int help(const char *progname) {
 }
 
 int main(int argc, char **argv) {
-	if (argc < 2) {
-		return help(argv[0]);
-	}
-
 	zrep *ans = NULL;
 
 	if (argc == 2) {
