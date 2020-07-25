@@ -94,8 +94,8 @@ zrep *z_mul(const zrep *z1, const zrep *z2) {
 			} else {
 				zrep *temp = sum;
 				sum = z_add(sum, summand);
-				z_clear(temp);
-				z_clear(summand);
+				z_clear(REP, temp);
+				z_clear(REP, summand);
 			}
 		}
 	}

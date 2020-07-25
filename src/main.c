@@ -1,6 +1,5 @@
 #include <zeckendorf.h>
 #include <arithmetic.h>
-#include <error.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,38 +17,38 @@ int main(int argc, char **argv) {
 	zrep *ans = NULL;
 
 	if (argc == 2) {
-		zint *n = strtozi(argv[1]);
+		zint *n = strtoz(INT, argv[1]);
 		if (n) {
 			ans = z_rep(n);
-			free(n);
+			z_clear(INT, n);
 		} else {
-			return z_error(ARG, argv[1]);
+			return z_error(INT, argv[1]);
 		}
 	} else if (argc > 3 && (strcmp(argv[1], "add") == 0 || strcmp(argv[1], "mul") == 0)) {
 		zrep *(*op)(const zrep *, const zrep *) = argv[1][0] == 'a' ? z_add : z_mul;
-		zrep *z1 = strtozr(argv[2]);
-		zrep *z2 = strtozr(argv[3]);
+		zrep *z1 = strtoz(REP, argv[2]);
+		zrep *z2 = strtoz(REP, argv[3]);
 		if (!z1) {
 			if (z2) {
-				z_clear(z2);
+				z_clear(REP, z2);
 			}
 			return z_error(REP, argv[2]);
 		} else if (!z2) {
-			z_clear(z1);
+			z_clear(REP, z1);
 			return z_error(REP, argv[3]);
 		} else {
 			ans = (*op)(z1, z2);
-			z_clear(z1);
-			z_clear(z2);
+			z_clear(REP, z1);
+			z_clear(REP, z2);
 			for (int i = 4; i < argc; i++) {
-				z1 = strtozr(argv[i]);
+				z1 = strtoz(REP, argv[i]);
 				if (!z1) {
-					z_clear(ans);
+					z_clear(REP, ans);
 					return z_error(REP, argv[i]);
 				} else {
 					z2 = (*op)(z1, ans);
-					z_clear(z1);
-					z_clear(ans);
+					z_clear(REP, z1);
+					z_clear(REP, ans);
 					ans = z2;
 				}
 			}
@@ -59,7 +58,7 @@ int main(int argc, char **argv) {
 	}
 	
 	char *s = zrtostr(ans);
-	z_clear(ans);
+	z_clear(REP, ans);
 	puts(s);
 	free(s);
 }

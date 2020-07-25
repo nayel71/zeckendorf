@@ -1,5 +1,6 @@
 #include <zeckendorf.h>
 #include "zrep.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,18 +11,6 @@ const char ONE = '1';
 struct zint {
 	long long val;
 };
-
-zint *strtozi(const char *s) {
-	char *end;
-	long long n = strtoll(s, &end, 0);
-	if (n > 0 && n <= LIMIT && !*end) {
-		zint *ans = malloc(sizeof(zint));
-		ans->val = n;
-		return ans;
-	} else {
-		return NULL;
-	}
-}
 
 // checks if s represents a valid Zeckendorf representation
 static bool rep_is_valid(const char *s) {
@@ -36,13 +25,27 @@ static bool rep_is_valid(const char *s) {
 	return true;
 }
 
-zrep *strtozr(const char *s) {
-	if (rep_is_valid(s)) {
-		size_t len = strlen(s);
-		char *copy = malloc(len * sizeof(char));
-		return zrep_new(memcpy(copy, s, len * sizeof(char)), len);
-	} else {
-		return NULL;
+void *strtoz(ztype typ, const char *s) {
+	switch (typ) {
+	case INT: {
+		char *end;
+		long long n = strtoll(s, &end, 0);
+		if (n > 0 && n <= LIMIT && !*end) {
+			zint *ans = malloc(sizeof(zint));
+			ans->val = n;
+			return ans;
+		} else {
+			return NULL;
+		}
+	}
+	case REP:
+		if (rep_is_valid(s)) {
+			size_t len = strlen(s);
+			char *copy = malloc(len * sizeof(char));
+			return zrep_new(memcpy(copy, s, len * sizeof(char)), len);
+		} else {
+			return NULL;
+		}
 	}
 }
 
@@ -52,10 +55,6 @@ char *zrtostr(const zrep *z) {
 	memcpy(s, zrep_arr(z), len * sizeof(char));
 	s[len] = '\0';
 	return s;
-}
-
-void z_clear(zrep *z) {
-	zrep_free(z);
 }
 
 // maxfib(n, index, fib) computes the largest Fibonacci number <= n,
@@ -89,4 +88,29 @@ zrep *z_rep(const zint *n) {
 	} 
 
 	return zrep_new(ans, pos);
+}
+
+void z_clear(ztype typ, void *ptr) {
+	switch (typ) {
+	case INT:
+		free(ptr);
+		break;
+	case REP:
+		zrep_free((zrep *)ptr);
+	}
+}
+
+// message(typ) returns an error message based on typ
+static const char *message(ztype typ) {
+	switch (typ) {
+	case INT:
+		return "invalid argument";
+	case REP:
+		return "invalid Zeckendorf representation";
+	}
+}
+
+int z_error(ztype typ, const char *param) {
+	fprintf(stderr, "Zeckendorf Error: %s %s\n", message(typ), param);
+	return EXIT_FAILURE;
 }
