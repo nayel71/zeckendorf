@@ -6,7 +6,7 @@
 
 // zrep_new(arr, len) allocates memory for a new zrep * representing arr
 // requires: arr is allocated and represents a valid zrep of length len
-// effects: allocates memory (caller must call z_clear)
+// effects: allocates memory (caller must call z_clear(REP, ... ))
 zrep *zrep_new(char *arr, size_t len);
 
 // zrep_arr(z) returns the array associated with z
