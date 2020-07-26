@@ -52,9 +52,8 @@ void *strtoz(ztype typ, const char *s) {
 char *zrtostr(const zrep *z) {
 	size_t len = zrep_len(z);
 	char *s = malloc((len + 1) * sizeof(char));
-	memcpy(s, zrep_arr(z), len * sizeof(char));
 	s[len] = '\0';
-	return s;
+	return memcpy(s, zrep_arr(z), len * sizeof(char));
 }
 
 // maxfib(n, index, fib) computes the largest Fibonacci number <= n,

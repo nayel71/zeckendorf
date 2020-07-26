@@ -23,7 +23,7 @@ typedef struct zrep zrep;
 
 // strtoz(typ, s) tries to convert s to a non-NULL zint * or zrep  *
 // returns the converted value if successful, returns NULL otherwise
-// effects: allocates memory (caller must call z_clear)
+// effects: allocates memory (caller must call z_clear(typ, ... ))
 void *strtoz(ztype typ, const char *s);
 
 // zrtostr(z) converts z to a string
@@ -33,7 +33,7 @@ char *zrtostr(const zrep *z);
 
 // z_rep(n) returns the Zeckendorf representation of n
 // requires: n is non-NULL
-// effects: allocates memory (caller must call z_clear)
+// effects: allocates memory (caller must call z_clear(REP, ... ))
 zrep *z_rep(const zint *n);
 
 // z_clear(typ, ptr) frees all memory associated with ptr
