@@ -13,21 +13,21 @@ struct zint {
 };
 
 // checks if s represents a valid Zeckendorf representation
-static bool rep_is_valid(const char *s) {
+static int rep_is_valid(const char *s) {
 	if (!s || *s != ONE) {
-		return false;
+		return 0;
 	}
 	for (const char *it = s + 1; *it; ++it) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it - 1) - ZERO > 1) {
-			return false;
+			return 0;
 		}
 	}
-	return true;
+	return 1;
 }
 
-void *strtoz(ztype typ, const char *s) {
+void *z_strto(ztype typ, const char *s) {
 	switch (typ) {
-	case INT: {
+	case ZINT: {
 		char *end;
 		long long n = strtoll(s, &end, 0);
 		if (n > 0 && n <= LIMIT && !*end) {
@@ -38,7 +38,7 @@ void *strtoz(ztype typ, const char *s) {
 			return NULL;
 		}
 	}
-	case REP:
+	case ZREP:
 		if (rep_is_valid(s)) {
 			size_t len = strlen(s);
 			char *copy = malloc(len * sizeof(char));
@@ -49,15 +49,14 @@ void *strtoz(ztype typ, const char *s) {
 	}
 }
 
-char *zrtostr(const zrep *z) {
+char *z_tostr(const zrep *z) {
 	size_t len = zrep_len(z);
 	char *s = malloc((len + 1) * sizeof(char));
 	s[len] = '\0';
 	return memcpy(s, zrep_arr(z), len * sizeof(char));
 }
 
-// maxfib(n, index, fib) computes the largest Fibonacci number <= n,
-// stores it at fib and stores its index at ind
+// computes the largest Fibonacci number <= n, stores it at fib and its index at ind
 static void maxfib(const long long n, size_t *ind, long long *fib) {
 	long long fib1 = 0;
 	long long fib2 = 1;
@@ -91,20 +90,20 @@ zrep *z_rep(const zint *n) {
 
 void z_clear(ztype typ, void *ptr) {
 	switch (typ) {
-	case INT:
+	case ZINT:
 		free(ptr);
 		break;
-	case REP:
+	case ZREP:
 		zrep_free(ptr);
 	}
 }
 
-// message(typ) returns an error message based on typ
+// returns an error message based on typ
 static const char *message(ztype typ) {
 	switch (typ) {
-	case INT:
+	case ZINT:
 		return "invalid argument";
-	case REP:
+	case ZREP:
 		return "invalid Zeckendorf representation";
 	}
 }

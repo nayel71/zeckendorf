@@ -1,28 +1,28 @@
 # compiler variables
-CC     := gcc
-LDLIBS :=
-CFLAGS := -Wall -MMD -MP -Werror=vla
+CC      = gcc
+LDLIBS  =
+CFLAGS  = -Wall -MMD -MP -Werror=vla
 
 ifeq ($(enable_asan),1)
-ASFLAGS:=
+ASFLAGS =
 CFLAGS += $(ASFLAGS) -g -O3
 endif
 
 # directory variables
-SRCDIR := src
-OBJDIR := obj
-DEPDIR := dep
-INCDIR := include
+SRCDIR  = src
+OBJDIR  = obj
+DEPDIR  = dep
+INCDIR  = include
 
 CFLAGS += -I$(INCDIR)
 
 # file variables
-SRCS   := $(wildcard $(SRCDIR)/*.c)
-OBJS   := $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-DEPS   := $(OBJS:.o=.d)
+SRCS    = $(wildcard $(SRCDIR)/*.c)
+OBJS    = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+DEPS    = $(OBJS:.o=.d)
 
 # executable
-EXEC   := zeckendorf
+EXEC    = zeckendorf
 
 # targets and dependencies
 .PHONY: all mkdirs clean
