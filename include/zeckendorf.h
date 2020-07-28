@@ -35,7 +35,7 @@ char *z_tostr(const zrep *z);
 zrep *z_rep(const zint *n);
 
 // z_clear(typ, ptr) frees all memory associated with ptr
-// requires: ptr is non-NULL
+// requires: ptr is a non-NULL zint * or zrep * corresponding to typ
 // effects: memory associated with ptr is invalid
 void z_clear(ztype typ, void *ptr);
 

@@ -12,12 +12,14 @@ struct zint {
 	long long val;
 };
 
-// checks if s gives a valid Zeckendorf representation; if yes, updates *len with its length
-static int rep_is_valid(const char *s, int *len) {
-	*len = 1;
+// returns 1 if s gives a valid Zeckendorf representation, returns 0 otherwise
+// updates *len with the length of the longest prefix of s that gives a valid Zeckendorf representation
+static int rep_is_valid(const char *s, size_t *len) {
+	*len = 0;
 	if (!s || *s != ONE) {
 		return 0;
 	}
+	++*len;
 	for (const char *it = s + 1; *it; ++it, ++*len) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it - 1) - ZERO > 1) {
 			return 0;
@@ -27,10 +29,13 @@ static int rep_is_valid(const char *s, int *len) {
 }
 
 void *z_strto(ztype typ, const char *s) {
+	char *end;
+	long long n;
+	size_t len;
+
 	switch (typ) {
-	case ZINT:;
-		char *end;
-		long long n = strtoll(s, &end, 0);
+	case ZINT:
+		n = strtoll(s, &end, 0);
 		if (n > 0 && n <= LIMIT && !*end) {
 			zint *ans = malloc(sizeof(zint));
 			ans->val = n;
@@ -38,8 +43,7 @@ void *z_strto(ztype typ, const char *s) {
 		} else {
 			return NULL;
 		}
-	case ZREP:;
-		int len;
+	case ZREP:
 		if (rep_is_valid(s, &len)) {
 			char *copy = malloc(len * sizeof(char));
 			return zrep_new(memcpy(copy, s, len * sizeof(char)), len);
