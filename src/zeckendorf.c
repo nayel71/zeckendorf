@@ -12,7 +12,7 @@ struct zint {
 	long long val;
 };
 
-// checks if s represents a valid Zeckendorf representation; updates len with its length
+// checks if s represents a valid Zeckendorf representation; if yes, updates len with its length
 static int rep_is_valid(const char *s, int *len) {
 	*len = 1;
 	if (!s || *s != ONE) {
