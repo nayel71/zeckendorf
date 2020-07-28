@@ -48,8 +48,8 @@ static zrep *easy_mul(const size_t len1, const size_t len2) {
 
 zrep *z_mul(const zrep *z1, const zrep *z2) {
 	// split z1 and z2 into sums of Fibonacci numbers, then multiply everything out
-	char *s1 = zrep_arr(z1);
-	char *s2 = zrep_arr(z2);
+	const char *s1 = zrep_arr(z1);
+	const char *s2 = zrep_arr(z2);
 	size_t len1 = zrep_len(z1);
 	size_t len2 = zrep_len(z2);
 	size_t num1 = 0; // number of ONEs in z1

@@ -13,7 +13,7 @@ zrep *zrep_new(char *arr, size_t len) {
 	return z;
 }
 
-char *zrep_arr(const zrep *z) {
+const char *zrep_arr(const zrep *z) {
 	return z->val;
 }
 

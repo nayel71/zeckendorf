@@ -9,9 +9,9 @@
 // effects: allocates memory (caller must call z_clear(REP, ... ))
 zrep *zrep_new(char *arr, size_t len);
 
-// zrep_arr(z) returns the array associated with z
+// zrep_arr(z) returns a pointer to the array associated with z
 // requires: z is non-NULL
-char *zrep_arr(const zrep *z);
+const char *zrep_arr(const zrep *z);
 
 // zrep_len(z) returns the length of z
 // requires: z is non-NULL
