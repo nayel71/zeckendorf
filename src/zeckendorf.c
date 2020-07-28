@@ -13,11 +13,12 @@ struct zint {
 };
 
 // checks if s represents a valid Zeckendorf representation
-static int rep_is_valid(const char *s) {
+static int rep_is_valid(const char *s, int *len) {
+	*len = 0;
 	if (!s || *s != ONE) {
 		return 0;
 	}
-	for (const char *it = s + 1; *it; ++it) {
+	for (const char *it = s + 1; *it; ++it, ++*len) {
 		if (*it < ZERO || *it > ONE || *it - ZERO + *(it - 1) - ZERO > 1) {
 			return 0;
 		}
@@ -27,7 +28,7 @@ static int rep_is_valid(const char *s) {
 
 void *z_strto(ztype typ, const char *s) {
 	switch (typ) {
-	case ZINT: {
+	case ZINT:;
 		char *end;
 		long long n = strtoll(s, &end, 0);
 		if (n > 0 && n <= LIMIT && !*end) {
@@ -37,10 +38,9 @@ void *z_strto(ztype typ, const char *s) {
 		} else {
 			return NULL;
 		}
-	}
-	case ZREP:
-		if (rep_is_valid(s)) {
-			size_t len = strlen(s);
+	case ZREP:;
+		int len;
+		if (rep_is_valid(s, &len)) {
 			char *copy = malloc(len * sizeof(char));
 			return zrep_new(memcpy(copy, s, len * sizeof(char)), len);
 		} else {
